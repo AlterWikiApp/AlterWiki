@@ -31,16 +31,27 @@
   - `getSummary()` — Kurzfassung/Vorschau
 - ✅ Caching-Logik integriert (Cache-Key basierend auf Endpoint + Params)
 
+#### Meilenstein 2 — Such-UI
+- ✅ SearchInput-Komponente mit Debounce (300ms) erstellt
+- ✅ SearchResults-Komponente für Ergebnisliste erstellt
+- ✅ SearchPage als zentrale Such-Seite implementiert
+- ✅ Vue Router 4 für Routing eingerichtet
+- ✅ App.vue auf router-view umgestellt
+- ✅ Barrierefreiheit: semantisches HTML, Tastaturbedienbarkeit, ARIA-Labels
+- ✅ Dark Mode Support in allen Komponenten
+- ✅ Live-Suche mit Wikipedia-API-Integration getestet
+
 ### Technische Details
 - **Package Manager:** npm
-- **Dependencies:** vue@^3.4.0
-- **DevDependencies:** vite, @vitejs/plugin-vue, typescript, tailwindcss, postcss, autoprefixer, eslint, prettier
+- **Dependencies:** vue@^3.4.0, vue-router@^4.0.0
+- **DevDependencies:** vite, @vitejs/plugin-vue, typescript, tailwindcss, postcss, autoprefixer, eslint, prettier, tsx, @types/node
 - **Build-Tool:** Vite
 - **Framework:** Vue 3 mit TypeScript
+- **Routing:** Vue Router 4
 - **Styling:** Tailwind CSS
 
 ### Offene Punkte / Nächste Schritte
-- ⏳ Meilenstein 2: Such-UI implementieren
+- ✅ Meilenstein 2: Such-UI implementieren
 - ⏳ Meilenstein 3: Artikelanzeige mit Sanitizing-Integration
 - ⏳ Meilenstein 4: Interne Navigation
 - ⏳ Meilenstein 5: Sprachauswahl
