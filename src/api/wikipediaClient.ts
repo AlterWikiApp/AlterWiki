@@ -1,7 +1,7 @@
 // Wikipedia API client with User-Agent header and caching
 // Implements Wikimedia API policy: https://meta.wikimedia.org/wiki/User-Agent_policy
 
-const USER_AGENT = 'WikipediaViewer/0.1.0 (https://github.com/yourusername/wikipedia-viewer; contact@example.com)'
+const USER_AGENT = 'AlterWiki/0.1.0 (https://github.com/AlterWikiApp/AlterWiki; lorddenti@protonmail.com)'
 
 interface CacheEntry<T> {
   data: T
@@ -89,7 +89,12 @@ class WikipediaClient {
     }
 
     const data = await response.json()
-    return data.title
+    // The random/title endpoint returns an object with items array
+    if (data.items && data.items.length > 0) {
+      return data.items[0].title
+    }
+    // Fallback for different response formats
+    return typeof data === 'string' ? data : data.title || JSON.stringify(data)
   }
 
   async getSummary(title: string, lang: string = 'en'): Promise<any> {

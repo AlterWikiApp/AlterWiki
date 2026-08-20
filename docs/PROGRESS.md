@@ -50,10 +50,7 @@
 - ⏳ Meilenstein 10: Testing & Politur
 
 ### Architekturentscheidungen
-- **Datum:** 2026-08-20
-- **Entscheidung:** Vue 3 + TypeScript + Vite + Tailwind CSS als Tech-Stack
-- **Begründung:** Moderne, performante Stack-Kombination; gute TypeScript-Unterstützung; Vite für schnelles Development; Tailwind für effizientes Styling mit Dark Mode Support
-- **Caching-Strategie:** In-Memory-Caching mit 5-Minuten-TTL als MVP-Lösung; später ggf. IndexedDB für persistenteres Caching
+Siehe `docs/DECISIONS.md`
 
 ### Hinweise
 - Die Tailwind-Warnings (@tailwind directives) sind normal und verschwinden beim Build-Prozess
