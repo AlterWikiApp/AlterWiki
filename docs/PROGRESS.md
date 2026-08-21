@@ -41,18 +41,31 @@
 - ✅ Dark Mode Support in allen Komponenten
 - ✅ Live-Suche mit Wikipedia-API-Integration getestet
 
+#### Meilenstein 3 — Artikelanzeige mit Sanitizing-Integration
+- ✅ DOMPurify für HTML-Sanitizing installiert
+- ✅ Zentraler Sanitizer-Wrapper (src/security/sanitizer.ts) erstellt
+- ✅ ArticleView-Komponente mit sanitizing implementiert
+- ✅ Artikel-Route zum Router hinzugefügt
+- ✅ SearchPage navigiert bei Klick auf Ergebnis zur Artikelansicht
+- ✅ Interne Wikilinks werden abgefangen und auf In-App-Navigation umgebogen
+- ✅ Externe Links öffnen regulär extern
+- ✅ Barrierefreiheit: semantisches HTML, Tastaturbedienbarkeit, ARIA-Labels
+- ✅ Dark Mode Support für Artikel-Content
+- ✅ Artikelanzeige mit echtem Wikipedia-Content getestet
+
 ### Technische Details
 - **Package Manager:** npm
-- **Dependencies:** vue@^3.4.0, vue-router@^4.0.0
+- **Dependencies:** vue@^3.4.0, vue-router@^4.0.0, dompurify
 - **DevDependencies:** vite, @vitejs/plugin-vue, typescript, tailwindcss, postcss, autoprefixer, eslint, prettier, tsx, @types/node
 - **Build-Tool:** Vite
 - **Framework:** Vue 3 mit TypeScript
 - **Routing:** Vue Router 4
 - **Styling:** Tailwind CSS
+- **Security:** DOMPurify für HTML-Sanitizing (verpflichtend)
 
 ### Offene Punkte / Nächste Schritte
 - ✅ Meilenstein 2: Such-UI implementieren
-- ⏳ Meilenstein 3: Artikelanzeige mit Sanitizing-Integration
+- ✅ Meilenstein 3: Artikelanzeige mit Sanitizing-Integration
 - ⏳ Meilenstein 4: Interne Navigation
 - ⏳ Meilenstein 5: Sprachauswahl
 - ⏳ Meilenstein 6: PWA-Grundgerüst

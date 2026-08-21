@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import SearchInput from '../components/SearchInput.vue'
 import SearchResults from '../components/SearchResults.vue'
 import { wikipediaClient } from '../api/wikipediaClient'
 
+const router = useRouter()
 const searchQuery = ref('')
 const searchResults = ref<any[]>([])
 const isLoading = ref(false)
@@ -39,8 +41,7 @@ const handleSearch = async (query: string) => {
 }
 
 const handleSelectResult = (title: string) => {
-  console.log('Selected article:', title)
-  // TODO: Navigate to article page (Meilenstein 3)
+  router.push({ name: 'article', params: { title: title.replace(/ /g, '_') } })
 }
 </script>
 
