@@ -60,6 +60,11 @@
 - ⏳ Meilenstein 8-9: Should-have Features (Zufälliger Artikel, Inhaltsverzeichnis)
 - ⏳ Meilenstein 10: Testing & Politur
 
+### Roadmap-Änderungen
+- **2026-08-21:** Phase 4 (Bearbeiten) aus Roadmap entfernt
+- **2026-08-21:** Editing-Funktionen komplett aus Feature-Liste gestrichen
+- Projektumfang reduziert auf reinen Reader-Anwendung
+
 ### Architekturentscheidungen
 Siehe `docs/DECISIONS.md`
 
