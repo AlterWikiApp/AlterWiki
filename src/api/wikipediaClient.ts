@@ -68,7 +68,7 @@ class WikipediaClient {
     const cached = this.getFromCache<string>(cacheKey)
     if (cached) return cached
 
-    const url = `https://${lang}.wikipedia.org/api/rest_v1/page/mobile-html/${encodeURIComponent(title)}`
+    const url = `https://${lang}.wikipedia.org/api/rest_v1/page/html/${encodeURIComponent(title)}`
     const response = await this.fetchWithHeaders(url)
 
     if (!response.ok) {
