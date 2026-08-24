@@ -52,6 +52,8 @@
 - ✅ Barrierefreiheit: semantisches HTML, Tastaturbedienbarkeit, ARIA-Labels
 - ✅ Dark Mode Support für Artikel-Content
 - ✅ Artikelanzeige mit echtem Wikipedia-Content getestet
+- ✅ API-Endpunkt von mobile-html auf page/html gewechselt (PCS-Kollaps-Problem behoben)
+- ⚠️ Bekanntes Problem: Interne Wikilink-Klick aktualisiert nur die Überschrift, nicht den Content (Routing-Problem)
 
 ### Technische Details
 - **Package Manager:** npm
