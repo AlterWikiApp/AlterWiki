@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import LanguageSelector from '../components/LanguageSelector.vue'
 import { wikipediaClient } from '../api/wikipediaClient'
 import { sanitizeHtml, isInternalWikipediaLink, extractArticleTitle } from '../security/sanitizer'
+import { currentLanguage } from '../state/language'
 
 const route = useRoute()
 const router = useRouter()
+
+// DEBUG: Prüfen ob currentLanguage reaktiv ist
+console.log('ArticleView mounted, currentLanguage:', currentLanguage.value)
 
 const articleHtml = ref('')
 const isLoading = ref(true)
@@ -40,7 +45,7 @@ const loadArticle = async () => {
   error.value = undefined
 
   try {
-    const rawHtml = await wikipediaClient.getArticle(articleTitle.value, 'en')
+    const rawHtml = await wikipediaClient.getArticle(articleTitle.value)
     // MANDATORY: Sanitize all Wikipedia HTML before rendering
     articleHtml.value = sanitizeHtml(rawHtml)
     // Scroll to top so user starts at beginning of new article
@@ -52,6 +57,13 @@ const loadArticle = async () => {
     isLoading.value = false
   }
 }
+
+// Watch for language changes to reload article in new language
+watch(currentLanguage, (newLang, oldLang) => {
+  console.log('Language changed from', oldLang, 'to', newLang)
+  articleHtml.value = ''
+  loadArticle()
+})
 
 const handleLinkClick = (event: MouseEvent) => {
   const target = event.target as HTMLElement
@@ -82,14 +94,17 @@ const goBack = () => {
   <div class="article-view">
     <div class="article-view__container">
       <div class="article-view__header">
-        <button 
-          class="article-view__back-button"
-          @click="goBack"
-          aria-label="Back to search"
-        >
-          ← Back to Search
-        </button>
-        <h1 class="article-view__title">{{ articleTitle.replace(/_/g, ' ') }}</h1>
+        <div class="article-view__header-left">
+          <button 
+            class="article-view__back-button"
+            @click="goBack"
+            aria-label="Back to search"
+          >
+            ← Back to Search
+          </button>
+          <h1 class="article-view__title">{{ articleTitle.replace(/_/g, ' ') }}</h1>
+        </div>
+        <LanguageSelector />
       </div>
 
       <div v-if="isLoading" class="article-view__loading">
@@ -130,6 +145,10 @@ const goBack = () => {
 }
 
 .article-view__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #e5e7eb;
@@ -137,6 +156,18 @@ const goBack = () => {
 
 .dark .article-view__header {
   border-bottom-color: #374151;
+}
+
+.article-view__header-left {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .article-view__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .article-view__back-button {

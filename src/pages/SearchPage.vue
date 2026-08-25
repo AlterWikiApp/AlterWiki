@@ -95,8 +95,21 @@ const handleSelectResult = (title: string) => {
 .dark .search-page__title {
   color: #f9fafb;
 }
-
 .search-page__input-wrapper {
   margin-bottom: 1rem;
+}
+.search-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 640px) {
+  .search-page__header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
 }
 </style>

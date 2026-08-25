@@ -1,6 +1,8 @@
 // Wikipedia API client with User-Agent header and caching
 // Implements Wikimedia API policy: https://meta.wikimedia.org/wiki/User-Agent_policy
 
+import { currentLanguage } from '../state/language'
+
 const USER_AGENT = 'AlterWiki/0.1.0 (https://github.com/AlterWikiApp/AlterWiki; lorddenti@protonmail.com)'
 
 interface CacheEntry<T> {
@@ -46,12 +48,13 @@ class WikipediaClient {
     return response
   }
 
-  async search(query: string, lang: string = 'en', limit: number = 10): Promise<any> {
-    const cacheKey = this.getCacheKey('search', { query, lang, limit })
+  async search(query: string, lang?: string, limit: number = 10): Promise<any> {
+    const resolvedLang = lang || currentLanguage.value
+    const cacheKey = this.getCacheKey('search', { query, lang: resolvedLang, limit })
     const cached = this.getFromCache<any>(cacheKey)
     if (cached) return cached
 
-    const url = `https://${lang}.wikipedia.org/w/rest.php/v1/search/page?q=${encodeURIComponent(query)}&limit=${limit}`
+    const url = `https://${resolvedLang}.wikipedia.org/w/rest.php/v1/search/page?q=${encodeURIComponent(query)}&limit=${limit}`
     const response = await this.fetchWithHeaders(url)
 
     if (!response.ok) {
@@ -63,12 +66,13 @@ class WikipediaClient {
     return data
   }
 
-  async getArticle(title: string, lang: string = 'en'): Promise<string> {
-    const cacheKey = this.getCacheKey('article', { title, lang })
+  async getArticle(title: string, lang?: string): Promise<string> {
+    const resolvedLang = lang || currentLanguage.value
+    const cacheKey = this.getCacheKey('article', { title, lang: resolvedLang })
     const cached = this.getFromCache<string>(cacheKey)
     if (cached) return cached
 
-    const url = `https://${lang}.wikipedia.org/api/rest_v1/page/html/${encodeURIComponent(title)}`
+    const url = `https://${resolvedLang}.wikipedia.org/api/rest_v1/page/html/${encodeURIComponent(title)}`
     const response = await this.fetchWithHeaders(url)
 
     if (!response.ok) {
@@ -80,8 +84,9 @@ class WikipediaClient {
     return html
   }
 
-  async getRandomArticle(lang: string = 'en'): Promise<string> {
-    const url = `https://${lang}.wikipedia.org/api/rest_v1/page/random/title`
+  async getRandomArticle(lang?: string): Promise<string> {
+    const resolvedLang = lang || currentLanguage.value
+    const url = `https://${resolvedLang}.wikipedia.org/api/rest_v1/page/random/title`
     const response = await this.fetchWithHeaders(url)
 
     if (!response.ok) {
@@ -97,12 +102,13 @@ class WikipediaClient {
     return typeof data === 'string' ? data : data.title || JSON.stringify(data)
   }
 
-  async getSummary(title: string, lang: string = 'en'): Promise<any> {
-    const cacheKey = this.getCacheKey('summary', { title, lang })
+  async getSummary(title: string, lang?: string): Promise<any> {
+    const resolvedLang = lang || currentLanguage.value
+    const cacheKey = this.getCacheKey('summary', { title, lang: resolvedLang })
     const cached = this.getFromCache<any>(cacheKey)
     if (cached) return cached
 
-    const url = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`
+    const url = `https://${resolvedLang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`
     const response = await this.fetchWithHeaders(url)
 
     if (!response.ok) {
