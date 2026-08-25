@@ -1,10 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/png" href="/icons/icon-192.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wikipedia Viewer</title>
+    <meta name="theme-color" content="#3b82f6" />
+    <meta
+      name="description"
+      content="AlterWiki – Open-Source Wikipedia-App mit Fokus auf Privatsphäre und Barrierefreiheit"
+    />
+    <title>AlterWiki</title>
+    <script>
+      (function () {
+        var key = 'alterwiki-theme'
+        var stored = localStorage.getItem(key)
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        var isDark =
+          stored === 'dark' || ((stored === 'system' || !stored) && prefersDark)
+        var root = document.documentElement
+        if (isDark) {
+          root.classList.add('dark')
+          root.style.colorScheme = 'dark'
+        } else {
+          root.style.colorScheme = 'light'
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="app"></div>

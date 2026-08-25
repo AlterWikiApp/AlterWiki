@@ -1,7 +1,7 @@
 # Feature: Reader (Phase 1 — MVP)
 
 **Status:** Spezifiziert, bereit für Umsetzung
-**Letzte Aktualisierung:** 2026-08-20
+**Letzte Aktualisierung:** 2026-08-26
 **Bezug:** `docs/ROADMAP.md` Phase 1, `PRINCIPLES.md` (Sicherheit, Barrierefreiheit)
 
 ## Ziel
@@ -28,6 +28,12 @@ Wikipedias eigene Seite 1:1 anzeigen würde.
 4. Sprachauswahl
 5. PWA-Grundgerüst (installierbar, App-Shell offline startbar)
 6. Dark/Light-Theme, wirkt auch auf gerenderten Artikel-Content
+
+**Update 2026-08-26 (Meilenstein 7):** Theme-Switcher mit Modi
+`system`/`light`/`dark`, localStorage-Persistenz, `prefers-color-scheme`-
+Unterstützung, `html.dark`-Klasse + Übergangsanimation. UI global in
+`App.vue`, Artikel-Content via bestehende `:deep`-Dark-Styles in
+`ArticleView.vue`.
 
 ### Should-have
 7. Zufälliger Artikel
@@ -86,6 +92,13 @@ aktuellen offiziellen Doku verifizieren (`GET .../api/rest_v1/?spec`).
 - Kein echtes Offline-Caching von Artikeln im MVP — bei fehlender
   Verbindung reicht eine klare Fehlermeldung. Echtes Offline-Lesen ist
   Phase 3.
+
+**Update 2026-08-26 (Meilenstein 6):** PWA-Grundgerüst mit App-Shell-
+Offline-Start und Service-Worker-Cache für bereits besuchte Artikel
+(via `vite-plugin-pwa`/Workbox, `CacheFirst` für Artikel-HTML). Keine
+neuen Artikel/Suchen offline — globaler Hinweis „Du bist offline – keine
+neuen Artikel“. Vollständiges Offline-Lesen (Download, Persistenz über
+Sessions hinaus) bleibt Phase 3.
 
 ## Akzeptanzkriterien (Definition of Done)
 

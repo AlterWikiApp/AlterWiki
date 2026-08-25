@@ -1,7 +1,7 @@
 # Progress Log
 
 **Status:** Laufender Fortschritts-/Session-Log
-**Letzte Aktualisierung:** 2026-08-25
+**Letzte Aktualisierung:** 2026-08-26
 
 ## Session 1 — 2026-08-20
 
@@ -133,9 +133,6 @@ Siehe `docs/DECISIONS.md`
 - npm audit zeigt 5 vulnerabilities (4 moderate, 1 high) — können später adressiert werden
 - User-Agent in `wikipediaClient.ts` muss noch mit echten Projekt-Details aktualisiert werden
 
-
-
-
 ## Session 3 — 2026-08-25
 
 ### Abgeschlossen: Wikilink-Navigation Bugfix (Meilenstein 4 — Interne Navigation)
@@ -165,6 +162,11 @@ Siehe `docs/DECISIONS.md`
 - ⏳ Meilenstein 7: Dark/Light-Theme
 - ⏳ Meilenstein 8-9: Should-have Features (Zufälliger Artikel, Inhaltsverzeichnis)
 - ⏳ Meilenstein 10: Testing & Politur
+
+
+=======
+
+> > > > > > > 7678280 (feat: Dark/Light Theme + PWA Offline Support)    
 
 ## Session 4 — 2026-08-25
 
@@ -201,3 +203,94 @@ Siehe `docs/DECISIONS.md`
 - ⏳ Meilenstein 7: Dark/Light-Theme
 - ⏳ Meilenstein 8-9: Should-have Features (Zufälliger Artikel, Inhaltsverzeichnis)
 - ⏳ Meilenstein 10: Testing & Politur
+  
+  
+  =======
+
+## Session 5 — 2026-08-26
+
+### Abgeschlossen: Meilenstein 6 — PWA-Grundgerüst
+
+#### Umgesetzt
+
+- `vite.config.ts` — `vite-plugin-pwa` konfiguriert mit Workbox Service Worker, Web-App-Manifest und Runtime-Caching für Wikipedia-API-Antworten
+- **Manifest:** Name „AlterWiki“, `display: standalone`, `lang: de`, Theme-Farbe `#3b82f6`, Hintergrund `#f9fafb`
+- **Icons:** `public/icons/icon-192.png` und `icon-512.png` (einfaches „AW“-Logo auf Blau)
+- **App-Shell offline:** JS/CSS/HTML werden per Workbox precached — App startet ohne Netzwerk
+- **Artikel-Cache:** Bereits geladene Artikel (`/api/rest_v1/page/html/…`) werden im Service Worker (`CacheFirst`, max. 100 Einträge, 30 Tage) vorgehalten
+- `src/state/online.ts` — reaktiver Online-Status via `navigator.onLine` + Event-Listener
+- `src/components/OfflineBanner.vue` — barrierefreier Hinweis „Du bist offline – keine neuen Artikel“ (`role="status"`, `aria-live="polite"`, Dark Mode)
+- `src/App.vue` — OfflineBanner global eingebunden
+- `src/main.ts` — Service-Worker-Registrierung via `virtual:pwa-register`
+- `src/api/wikipediaClient.ts` — offline-aware Fehlermeldungen
+- `src/pages/SearchPage.vue` — Suche blockiert bei Offline mit klarer Meldung
+- `index.html` — `lang="de"`, Titel/Meta für AlterWiki
+
+#### Technische Details
+
+- **Runtime-Caching-Strategien:**
+  - Artikel-HTML: `CacheFirst` (Offline-Lesen bereits besuchter Artikel)
+  - Suche: `NetworkFirst` (keine neuen Ergebnisse offline, außer zufällig gecacht)
+  - Summary: `CacheFirst`
+- **Keine neuen Runtime-Dependencies** — nur `vite-plugin-pwa` als DevDependency (laut Roadmap vorgesehen, fehlte in `package.json`)
+- Service Worker: `registerType: 'autoUpdate'` — Updates im Hintergrund
+
+#### Dateien geändert
+
+- **Neu:** `public/icons/icon-192.png`, `public/icons/icon-512.png`
+- **Neu:** `src/state/online.ts`
+- **Neu:** `src/components/OfflineBanner.vue`
+- Geändert: `vite.config.ts`, `index.html`, `src/main.ts`, `src/App.vue`, `src/vite-env.d.ts`
+- Geändert: `src/api/wikipediaClient.ts`, `src/pages/SearchPage.vue`
+- Geändert: `package.json`, `package-lock.json`
+
+#### Status
+
+- ✅ Meilenstein 4 (Interne Navigation) — vollständig funktionsfähig
+- ✅ Meilenstein 5 (Sprachauswahl) — vollständig funktionsfähig
+- ✅ Meilenstein 6 (PWA-Grundgerüst) — vollständig funktionsfähig
+- ⏳ Meilenstein 7: Dark/Light-Theme
+- ⏳ Meilenstein 8-9: Should-have Features (Zufälliger Artikel, Inhaltsverzeichnis)
+- ⏳ Meilenstein 10: Testing & Politur
+
+## Session 6 — 2026-08-26
+
+### Abgeschlossen: Meilenstein 7 — Dark/Light-Theme Switcher
+
+#### Umgesetzt
+
+- `src/state/theme.ts` — Zentraler Theme-State mit drei Modi: `system`, `light`, `dark`
+- **localStorage-Persistenz** unter Schlüssel `alterwiki-theme` (Default: `system`)
+- **System-Preference:** `prefers-color-scheme` wird bei Modus „Automatisch“ genutzt; Listener reagiert auf OS-Wechsel
+- `src/components/ThemeToggle.vue` — Modus-Button (Automatisch/Hell/Dunkel) + barrierefreier Switch (`role="switch"`, `aria-checked`)
+- `html.dark`-Klasse auf `document.documentElement` — kompatibel mit bestehenden `.dark`-Styles aller Komponenten
+- **Übergangsanimation:** `theme-transition`-Klasse auf `<html>` für 300 ms (respektiert `prefers-reduced-motion`)
+- **FOUC-Vermeidung:** Inline-Script in `index.html` setzt Theme vor Vue-Mount
+- `src/style.css` — Light/Dark-Basisfarben, globale Theme-Transitions
+- `src/App.vue` — ThemeToggle global oben rechts
+
+#### Technische Details
+
+- Modus-Button zyklisch: Automatisch → Hell → Dunkel → Automatisch
+- Switch toggelt direkt zwischen Hell und Dunkel (explizite Präferenz)
+- `meta[name="theme-color"]` passt sich an (#3b82f6 hell, #111827 dunkel)
+- Responsive: Modus-Label auf schmalen Viewports ausgeblendet, Icons bleiben sichtbar
+
+#### Dateien geändert
+
+- **Neu:** `src/state/theme.ts`
+- **Neu:** `src/components/ThemeToggle.vue`
+- Geändert: `src/App.vue`, `src/main.ts`, `src/style.css`, `index.html`
+
+#### Status
+
+- ✅ Meilenstein 4 (Interne Navigation) — vollständig funktionsfähig
+- ✅ Meilenstein 5 (Sprachauswahl) — vollständig funktionsfähig
+- ✅ Meilenstein 6 (PWA-Grundgerüst) — vollständig funktionsfähig
+- ✅ Meilenstein 7 (Dark/Light-Theme) — vollständig funktionsfähig
+- ⏳ Meilenstein 8-9: Should-have Features (Zufälliger Artikel, Inhaltsverzeichnis)
+- ⏳ Meilenstein 10: Testing & Politur
+
+## 
+
+> > > > > > > 7678280 (feat: Dark/Light Theme + PWA Offline Support)

@@ -5,6 +5,8 @@ import { currentLanguage } from '../state/language'
 
 const USER_AGENT = 'AlterWiki/0.1.0 (https://github.com/AlterWikiApp/AlterWiki; lorddenti@protonmail.com)'
 
+const OFFLINE_MESSAGE = 'Du bist offline – keine neuen Artikel'
+
 interface CacheEntry<T> {
   data: T
   timestamp: number
@@ -39,13 +41,30 @@ class WikipediaClient {
   }
 
   private async fetchWithHeaders(url: string): Promise<Response> {
-    const response = await fetch(url, {
-      headers: {
-        'User-Agent': USER_AGENT,
-        'Api-User-Agent': USER_AGENT,
-      },
-    })
-    return response
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': USER_AGENT,
+          'Api-User-Agent': USER_AGENT,
+        },
+      })
+      return response
+    } catch {
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        throw new Error(OFFLINE_MESSAGE)
+      }
+      throw new Error('Netzwerkfehler – bitte Verbindung prüfen')
+    }
+  }
+
+  private ensureResponseOk(response: Response, fallback: string): void {
+    if (response.ok) return
+
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      throw new Error(OFFLINE_MESSAGE)
+    }
+
+    throw new Error(`${fallback}: ${response.statusText}`)
   }
 
   async search(query: string, lang?: string, limit: number = 10): Promise<any> {
@@ -56,10 +75,7 @@ class WikipediaClient {
 
     const url = `https://${resolvedLang}.wikipedia.org/w/rest.php/v1/search/page?q=${encodeURIComponent(query)}&limit=${limit}`
     const response = await this.fetchWithHeaders(url)
-
-    if (!response.ok) {
-      throw new Error(`Search failed: ${response.statusText}`)
-    }
+    this.ensureResponseOk(response, 'Search failed')
 
     const data = await response.json()
     this.setCache(cacheKey, data)
@@ -74,10 +90,7 @@ class WikipediaClient {
 
     const url = `https://${resolvedLang}.wikipedia.org/api/rest_v1/page/html/${encodeURIComponent(title)}`
     const response = await this.fetchWithHeaders(url)
-
-    if (!response.ok) {
-      throw new Error(`Article fetch failed: ${response.statusText}`)
-    }
+    this.ensureResponseOk(response, 'Article fetch failed')
 
     const html = await response.text()
     this.setCache(cacheKey, html)
@@ -88,10 +101,7 @@ class WikipediaClient {
     const resolvedLang = lang || currentLanguage.value
     const url = `https://${resolvedLang}.wikipedia.org/api/rest_v1/page/random/title`
     const response = await this.fetchWithHeaders(url)
-
-    if (!response.ok) {
-      throw new Error(`Random article fetch failed: ${response.statusText}`)
-    }
+    this.ensureResponseOk(response, 'Random article fetch failed')
 
     const data = await response.json()
     // The random/title endpoint returns an object with items array
@@ -110,10 +120,7 @@ class WikipediaClient {
 
     const url = `https://${resolvedLang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`
     const response = await this.fetchWithHeaders(url)
-
-    if (!response.ok) {
-      throw new Error(`Summary fetch failed: ${response.statusText}`)
-    }
+    this.ensureResponseOk(response, 'Summary fetch failed')
 
     const data = await response.json()
     this.setCache(cacheKey, data)

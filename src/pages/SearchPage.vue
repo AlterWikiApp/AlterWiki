@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import SearchInput from '../components/SearchInput.vue'
 import SearchResults from '../components/SearchResults.vue'
 import { wikipediaClient } from '../api/wikipediaClient'
+import { isOnline } from '../state/online'
 
 const router = useRouter()
 const searchQuery = ref('')
@@ -13,6 +14,12 @@ const error = ref<string>()
 
 const handleSearch = async (query: string) => {
   if (!query.trim()) {
+    searchResults.value = []
+    return
+  }
+
+  if (!isOnline.value) {
+    error.value = 'Du bist offline – keine neuen Artikel'
     searchResults.value = []
     return
   }
