@@ -11,7 +11,6 @@ const articleHtml = ref('')
 const isLoading = ref(true)
 const error = ref<string>()
 const articleTitle = computed(() => route.params.title as string)
-const articleTitle = computed(() => route.params.title as string)
 
 // Watch for route param changes to reload article content when navigating
 // between articles via internal wikilinks (same component, different params)
@@ -29,9 +28,7 @@ watch(
 onMounted(async () => {
   await loadArticle()
 })
-    articleHtml.value = sanitizeHtml(rawHtml)
-    // Scroll to top so user starts at beginning of new article
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+
 const loadArticle = async () => {
   if (!articleTitle.value) {
     error.value = 'No article title provided'
@@ -46,6 +43,8 @@ const loadArticle = async () => {
     const rawHtml = await wikipediaClient.getArticle(articleTitle.value, 'en')
     // MANDATORY: Sanitize all Wikipedia HTML before rendering
     articleHtml.value = sanitizeHtml(rawHtml)
+    // Scroll to top so user starts at beginning of new article
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Failed to load article'
     articleHtml.value = ''

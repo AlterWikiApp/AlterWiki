@@ -8,6 +8,7 @@
 ### Abgeschlossen: Phase 0 (Projekt-Setup) + Meilenstein 1 (Wikipedia-API-Client)
 
 #### Phase 0 — Projekt-Setup
+
 - ✅ Repository-Struktur korrigiert (`scr` → `src`)
 - ✅ Vite + Vue 3 + TypeScript Projekt eingerichtet
 - ✅ Tailwind CSS installiert und konfiguriert (inkl. Dark Mode)
@@ -21,6 +22,7 @@
   - `src/styles/` — Themes
 
 #### Meilenstein 1 — Wikipedia-API-Client
+
 - ✅ Zentraler Wikipedia-Client (`src/api/wikipediaClient.ts`) implementiert
 - ✅ `User-Agent`/`Api-User-Agent` Header gemäß Wikimedia-Policy gesetzt
 - ✅ Einfaches In-Memory-Caching (5 Minuten TTL) implementiert
@@ -32,6 +34,7 @@
 - ✅ Caching-Logik integriert (Cache-Key basierend auf Endpoint + Params)
 
 #### Meilenstein 2 — Such-UI
+
 - ✅ SearchInput-Komponente mit Debounce (300ms) erstellt
 - ✅ SearchResults-Komponente für Ergebnisliste erstellt
 - ✅ SearchPage als zentrale Such-Seite implementiert
@@ -42,6 +45,7 @@
 - ✅ Live-Suche mit Wikipedia-API-Integration getestet
 
 #### Meilenstein 3 — Artikelanzeige mit Sanitizing-Integration
+
 - ✅ DOMPurify für HTML-Sanitizing installiert
 - ✅ Zentraler Sanitizer-Wrapper (src/security/sanitizer.ts) erstellt
 - ✅ ArticleView-Komponente mit sanitizing implementiert
@@ -56,6 +60,7 @@
 - ⚠️ Bekanntes Problem: Interne Wikilink-Klick aktualisiert nur die Überschrift, nicht den Content (Routing-Problem)
 
 ### Technische Details
+
 - **Package Manager:** npm
 - **Dependencies:** vue@^3.4.0, vue-router@^4.0.0, dompurify
 - **DevDependencies:** vite, @vitejs/plugin-vue, typescript, tailwindcss, postcss, autoprefixer, eslint, prettier, tsx, @types/node
@@ -66,6 +71,7 @@
 - **Security:** DOMPurify für HTML-Sanitizing (verpflichtend)
 
 ### Offene Punkte / Nächste Schritte
+
 - ✅ Meilenstein 2: Such-UI implementieren
 - ✅ Meilenstein 3: Artikelanzeige mit Sanitizing-Integration
 - ⏳ Meilenstein 4: Interne Navigation
@@ -76,6 +82,7 @@
 - ⏳ Meilenstein 10: Testing & Politur
 
 ### Roadmap-Änderungen
+
 - **2026-08-21:** Phase 4 (Bearbeiten) aus Roadmap entfernt
 - **2026-08-21:** Editing-Funktionen komplett aus Feature-Liste gestrichen
 - Projektumfang reduziert auf reinen Reader-Anwendung
@@ -85,6 +92,7 @@
 ### Abgeschlossen: Meilenstein 3 (Artikelanzeige) Bugfix + Dokumentation
 
 #### page/html-Endpoint-Fix
+
 - ✅ API-Endpunkt von `mobile-html` auf `page/html` gewechselt
 - ✅ Ursache: PCS (Page Content Service) Kollaps-Struktur blendete Sektionen aus
 - ✅ Verifiziert: Alle Artikel-Sektionen jetzt vollständig sichtbar
@@ -92,18 +100,21 @@
 - ✅ Entscheidung in `docs/DECISIONS.md` dokumentiert
 
 #### Sanitizing-Check nach Endpoint-Wechsel
+
 - ✅ DOMPurify-Konfiguration passt zu neuem page/html-Format
 - ✅ Keine Edit-Section-Links im page/html-Format (kein Sanitizing-Problem)
 - ✅ Script-Payload-Test erstellt (tests/script-payload-test.ts)
 - ⚠️ Node.js-Test schlägt fehl (DOMPurify Import-Problem), aber Browser-Sanitizing funktioniert
 
 #### Link-Klick-Bug (Teilfortschritt)
+
 - ⚠️ Bekanntes Problem: Interne Wikilink-Klick aktualisiert nur Überschrift, nicht Content
 - ✅ Link-Interception implementiert (ArticleView.vue)
 - ✅ Routing-Logik vorhanden, aber Content-Reload fehlt
 - 📝 Offen für nächsten Agent: Meilenstein 4 (Interne Navigation)
 
 #### Dokumentation & Repository
+
 - ✅ Alle Doku-Dateien committet: AGENTS.md, PRINCIPLES.md, PROJECT_STRUCTURE.md
 - ✅ docs/features/reader.md hinzugefügt
 - ✅ docs/IDEAS.md erstellt (lokale Profile, kuratierte Inhalte)
@@ -113,9 +124,44 @@
 - ✅ Alle 17 Commits auf GitHub gepusht
 
 ### Architekturentscheidungen
+
 Siehe `docs/DECISIONS.md`
 
 ### Hinweise
+
 - Die Tailwind-Warnings (@tailwind directives) sind normal und verschwinden beim Build-Prozess
 - npm audit zeigt 5 vulnerabilities (4 moderate, 1 high) — können später adressiert werden
 - User-Agent in `wikipediaClient.ts` muss noch mit echten Projekt-Details aktualisiert werden
+
+
+
+
+## Session 3 — 2026-08-25
+
+### Abgeschlossen: Wikilink-Navigation Bugfix (Meilenstein 4 — Interne Navigation)
+
+#### Problem
+
+- Interne Wikilink-Klicks aktualisierten nur die Artikel-Überschrift (`computed` auf `route.params.title`), nicht den Body-Content
+- Ursache: `loadArticle()` wurde nur in `onMounted()` aufgerufen; bei Routenwechsel innerhalb derselben Komponente (`/article/:title` → `/article/:title`) wurde `onMounted` nicht erneut ausgelöst
+
+#### Lösung
+
+- `watch()` auf `route.params.title` in `ArticleView.vue` hinzugefügt
+- Bei jeder Änderung des Titels: `articleHtml.value = ''` (alten Content sofort leeren) + `loadArticle()` (neuen Content fetchen)
+- `window.scrollTo({ top: 0, behavior: 'smooth' })` nach erfolgreichem Laden, damit der Nutzer oben im neuen Artikel landet
+- Keine Änderungen am Router oder an anderen Komponenten nötig
+
+#### Dateien geändert
+
+- `src/pages/ArticleView.vue` — `watch`-Import, Watcher auf `route.params.title`, Scroll-to-top
+- `docs/PROGRESS.md` — Session 3 dokumentiert
+
+#### Status
+
+- ✅ Meilenstein 4 (Interne Navigation) — Wikilink-Navigation vollständig funktionsfähig
+- ⏳ Meilenstein 5: Sprachauswahl
+- ⏳ Meilenstein 6: PWA-Grundgerüst
+- ⏳ Meilenstein 7: Dark/Light-Theme
+- ⏳ Meilenstein 8-9: Should-have Features (Zufälliger Artikel, Inhaltsverzeichnis)
+- ⏳ Meilenstein 10: Testing & Politur
