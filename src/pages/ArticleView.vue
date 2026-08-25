@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { wikipediaClient } from '../api/wikipediaClient'
 import { sanitizeHtml, isInternalWikipediaLink, extractArticleTitle } from '../security/sanitizer'
@@ -11,11 +11,27 @@ const articleHtml = ref('')
 const isLoading = ref(true)
 const error = ref<string>()
 const articleTitle = computed(() => route.params.title as string)
+const articleTitle = computed(() => route.params.title as string)
+
+// Watch for route param changes to reload article content when navigating
+// between articles via internal wikilinks (same component, different params)
+watch(
+  () => route.params.title,
+  (newTitle, oldTitle) => {
+    if (newTitle && newTitle !== oldTitle) {
+      articleHtml.value = ''
+      loadArticle()
+    }
+  },
+  { immediate: false }
+)
 
 onMounted(async () => {
   await loadArticle()
 })
-
+    articleHtml.value = sanitizeHtml(rawHtml)
+    // Scroll to top so user starts at beginning of new article
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 const loadArticle = async () => {
   if (!articleTitle.value) {
     error.value = 'No article title provided'
