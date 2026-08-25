@@ -1,7 +1,7 @@
 # Progress Log
 
 **Status:** Laufender Fortschritts-/Session-Log
-**Letzte Aktualisierung:** 2026-08-20
+**Letzte Aktualisierung:** 2026-08-25
 
 ## Session 1 — 2026-08-20
 
@@ -79,6 +79,38 @@
 - **2026-08-21:** Phase 4 (Bearbeiten) aus Roadmap entfernt
 - **2026-08-21:** Editing-Funktionen komplett aus Feature-Liste gestrichen
 - Projektumfang reduziert auf reinen Reader-Anwendung
+
+## Session 2 — 2026-08-25
+
+### Abgeschlossen: Meilenstein 3 (Artikelanzeige) Bugfix + Dokumentation
+
+#### page/html-Endpoint-Fix
+- ✅ API-Endpunkt von `mobile-html` auf `page/html` gewechselt
+- ✅ Ursache: PCS (Page Content Service) Kollaps-Struktur blendete Sektionen aus
+- ✅ Verifiziert: Alle Artikel-Sektionen jetzt vollständig sichtbar
+- ✅ Smoke-Test: Berlin Artikel jetzt 1.48MB (vs 0.78MB vorher)
+- ✅ Entscheidung in `docs/DECISIONS.md` dokumentiert
+
+#### Sanitizing-Check nach Endpoint-Wechsel
+- ✅ DOMPurify-Konfiguration passt zu neuem page/html-Format
+- ✅ Keine Edit-Section-Links im page/html-Format (kein Sanitizing-Problem)
+- ✅ Script-Payload-Test erstellt (tests/script-payload-test.ts)
+- ⚠️ Node.js-Test schlägt fehl (DOMPurify Import-Problem), aber Browser-Sanitizing funktioniert
+
+#### Link-Klick-Bug (Teilfortschritt)
+- ⚠️ Bekanntes Problem: Interne Wikilink-Klick aktualisiert nur Überschrift, nicht Content
+- ✅ Link-Interception implementiert (ArticleView.vue)
+- ✅ Routing-Logik vorhanden, aber Content-Reload fehlt
+- 📝 Offen für nächsten Agent: Meilenstein 4 (Interne Navigation)
+
+#### Dokumentation & Repository
+- ✅ Alle Doku-Dateien committet: AGENTS.md, PRINCIPLES.md, PROJECT_STRUCTURE.md
+- ✅ docs/features/reader.md hinzugefügt
+- ✅ docs/IDEAS.md erstellt (lokale Profile, kuratierte Inhalte)
+- ✅ docs/DECISIONS.md aktualisiert (mobile-html → page/html, Responsive-Design)
+- ✅ LICENSE (AGPLv3) von Remote übernommen
+- ✅ GitHub-Remote eingerichtet: https://github.com/AlterWikiApp/AlterWiki.git
+- ✅ Alle 17 Commits auf GitHub gepusht
 
 ### Architekturentscheidungen
 Siehe `docs/DECISIONS.md`
