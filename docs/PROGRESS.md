@@ -165,3 +165,39 @@ Siehe `docs/DECISIONS.md`
 - ⏳ Meilenstein 7: Dark/Light-Theme
 - ⏳ Meilenstein 8-9: Should-have Features (Zufälliger Artikel, Inhaltsverzeichnis)
 - ⏳ Meilenstein 10: Testing & Politur
+
+## Session 4 — 2026-08-25
+
+### Abgeschlossen: Meilenstein 5 — Sprachauswahl
+
+#### Umgesetzt
+
+- `src/state/language.ts` — Zentraler reaktiver Sprach-State mit localStorage-Persistenz, 10 unterstützte Sprachen (en, de, fr, es, it, pt, ru, ja, zh, ar)
+- `src/components/LanguageSelector.vue` — Barrierefreies Dropdown (ARIA-Attribute, Tastaturbedienbarkeit), Dark Mode Support
+- `src/api/wikipediaClient.ts` — Alle Methoden nutzen jetzt `currentLanguage.value` als Default statt hardcoded `'en'`
+- `src/pages/SearchPage.vue` — LanguageSelector eingebunden, Suche wird bei Sprachwechsel automatisch neu ausgeführt
+- `src/pages/ArticleView.vue` — LanguageSelector eingebunden, Artikel wird bei Sprachwechsel neu geladen
+
+#### Technische Details
+
+- `currentLanguage` ist ein Vue-`ref`, der in `localStorage` persistiert wird
+- Der `watch` auf `currentLanguage` in `ArticleView.vue` triggert `loadArticle()` bei jeder Sprachänderung
+- Der API-Client liest `currentLanguage.value` zur Laufzeit (nicht zur Compile-Zeit), damit Änderungen sofort wirksam werden
+- Cache-Invalidierung: Sprachwechsel löst keinen expliziten Cache-Clear aus, aber Cache-Keys enthalten die Sprache, daher werden alte Einträge nicht wiederverwendet
+
+#### Dateien geändert
+
+- **Neu:** `src/state/language.ts`
+- **Neu:** `src/components/LanguageSelector.vue`
+- Geändert: `src/api/wikipediaClient.ts`
+- Geändert: `src/pages/SearchPage.vue`
+- Geändert: `src/pages/ArticleView.vue`
+
+#### Status
+
+- ✅ Meilenstein 4 (Interne Navigation) — vollständig funktionsfähig
+- ✅ Meilenstein 5 (Sprachauswahl) — vollständig funktionsfähig
+- ⏳ Meilenstein 6: PWA-Grundgerüst
+- ⏳ Meilenstein 7: Dark/Light-Theme
+- ⏳ Meilenstein 8-9: Should-have Features (Zufälliger Artikel, Inhaltsverzeichnis)
+- ⏳ Meilenstein 10: Testing & Politur
