@@ -1,8 +1,6 @@
 # Feature: Reader (Phase 1 — MVP)
 
-**Status:** Spezifiziert, bereit für Umsetzung
-**Letzte Aktualisierung:** 2026-08-26
-**Bezug:** `docs/ROADMAP.md` Phase 1, `PRINCIPLES.md` (Sicherheit, Barrierefreiheit)
+**Status:** Spezifiziert, bereit für Umsetzung **Letzte Aktualisierung:** 2026-08-20 **Bezug:** `docs/ROADMAP.md` Phase 1, `PRINCIPLES.md` (Sicherheit, Barrierefreiheit)
 
 ## Ziel
 
@@ -22,6 +20,7 @@ Wikipedias eigene Seite 1:1 anzeigen würde.
 ## Umfang
 
 ### Must-have
+
 1. Volltextsuche mit Live-Vorschlägen
 2. Artikelanzeige (Text, Bilder, Infoboxen)
 3. Interne Wikilink-Navigation (in-App, mit Vor-/Zurück-Verlauf)
@@ -29,14 +28,19 @@ Wikipedias eigene Seite 1:1 anzeigen würde.
 5. PWA-Grundgerüst (installierbar, App-Shell offline startbar)
 6. Dark/Light-Theme, wirkt auch auf gerenderten Artikel-Content
 
-**Update 2026-08-26 (Meilenstein 7):** Theme-Switcher mit Modi
-`system`/`light`/`dark`, localStorage-Persistenz, `prefers-color-scheme`-
-Unterstützung, `html.dark`-Klasse + Übergangsanimation. UI global in
-`App.vue`, Artikel-Content via bestehende `:deep`-Dark-Styles in
-`ArticleView.vue`.
-
 ### Should-have
-7. Zufälliger Artikel
+
+7. **Link-Darstellungs-Demo:** Anzeigeeinstellung für Link-Darstellung im
+   Artikel-Content — Farbe (freie Wahl per `<input type="color">` + ein
+   paar Presets), Unterstrichen an/aus, oder komplett ohne visuelle
+   Linkdarstellung (Text bleibt aber funktional klickbar). Frei
+   kombinierbar, **nicht persistiert** (reine Demo/Session-State). Dient
+   als kleiner Vorgeschmack auf die Customization-Kernidee der Gesamt-App
+   — kein Zufalls-Artikel-Button wie ursprünglich angedacht. Siehe `PRINCIPLES.md` Abschnitt 5 ("Nutzerfreiheit bei Darstellungsoptionen")
+   für den zugrunde liegenden Design-Grundsatz: keine geschmacklichen
+   Einschränkungen für den Nutzer, aber das Einstellungs-Panel selbst
+   muss immer unabhängig von den gewählten Content-Styles bedienbar
+   bleiben, und ein "Zurücksetzen" muss immer funktionieren.
 8. Inhaltsverzeichnis/Sprungmarken im Artikel
 
 ## Datenfluss
@@ -56,12 +60,11 @@ Unterstützung, `html.dark`-Klasse + Übergangsanimation. UI global in
 
 ## Relevante API-Endpunkte (Ausgangspunkt für die Umsetzung)
 
-| Zweck | Endpunkt (Beispiel enwiki) |
-|---|---|
-| Suche (Live-Vorschläge) | `GET https://{lang}.wikipedia.org/w/rest.php/v1/search/page?q={query}&limit=…` |
-| Artikel-Content (aufbereitetes HTML) | `GET https://{lang}.wikipedia.org/api/rest_v1/page/mobile-html/{title}` |
-| Zufälliger Artikel | `GET https://{lang}.wikipedia.org/api/rest_v1/page/random/title` |
-| Kurzfassung/Vorschau (optional, später nützlich) | `GET https://{lang}.wikipedia.org/api/rest_v1/page/summary/{title}` |
+| Zweck                                            | Endpunkt (Beispiel enwiki)                                                                                                                     |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Suche (Live-Vorschläge)                          | `GET https://{lang}.wikipedia.org/w/rest.php/v1/search/page?q={query}&limit=…`                                                                 |
+| Artikel-Content (aufbereitetes HTML)             | `GET https://{lang}.wikipedia.org/api/rest_v1/page/html/{title}` (siehe `DECISIONS.md` — Wechsel von `mobile-html` wegen PCS-Kollaps-Struktur) |
+| Kurzfassung/Vorschau (optional, später nützlich) | `GET https://{lang}.wikipedia.org/api/rest_v1/page/summary/{title}`                                                                            |
 
 Bei jeder Anfrage: `Api-User-Agent`-Header setzen (siehe `PRINCIPLES.md`,
 Abschnitt 7). Genaue Parameter/Response-Felder vor Umsetzung anhand der
@@ -93,13 +96,6 @@ aktuellen offiziellen Doku verifizieren (`GET .../api/rest_v1/?spec`).
   Verbindung reicht eine klare Fehlermeldung. Echtes Offline-Lesen ist
   Phase 3.
 
-**Update 2026-08-26 (Meilenstein 6):** PWA-Grundgerüst mit App-Shell-
-Offline-Start und Service-Worker-Cache für bereits besuchte Artikel
-(via `vite-plugin-pwa`/Workbox, `CacheFirst` für Artikel-HTML). Keine
-neuen Artikel/Suchen offline — globaler Hinweis „Du bist offline – keine
-neuen Artikel“. Vollständiges Offline-Lesen (Download, Persistenz über
-Sessions hinaus) bleibt Phase 3.
-
 ## Akzeptanzkriterien (Definition of Done)
 
 - [ ] Suche zeigt Live-Vorschläge während der Eingabe
@@ -109,5 +105,5 @@ Sessions hinaus) bleibt Phase 3.
 - [ ] Sprachumschaltung funktioniert
 - [ ] Dark/Light-Theme wirkt konsistent auch im Artikel-Content
 - [ ] Sanitizing nachweislich aktiv (z.B. Test mit absichtlich
-      präpariertem Script-Payload schlägt fehl/wird entfernt)
+  präpariertem Script-Payload schlägt fehl/wird entfernt)
 - [ ] Grundlegende Barrierefreiheits-Checks (Lighthouse/axe) bestehen

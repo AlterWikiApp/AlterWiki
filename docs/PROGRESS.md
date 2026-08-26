@@ -163,11 +163,6 @@ Siehe `docs/DECISIONS.md`
 - ⏳ Meilenstein 8-9: Should-have Features (Zufälliger Artikel, Inhaltsverzeichnis)
 - ⏳ Meilenstein 10: Testing & Politur
 
-
-=======
-
-> > > > > > > 7678280 (feat: Dark/Light Theme + PWA Offline Support)    
-
 ## Session 4 — 2026-08-25
 
 ### Abgeschlossen: Meilenstein 5 — Sprachauswahl
@@ -203,9 +198,6 @@ Siehe `docs/DECISIONS.md`
 - ⏳ Meilenstein 7: Dark/Light-Theme
 - ⏳ Meilenstein 8-9: Should-have Features (Zufälliger Artikel, Inhaltsverzeichnis)
 - ⏳ Meilenstein 10: Testing & Politur
-  
-  
-  =======
 
 ## Session 5 — 2026-08-26
 
@@ -288,9 +280,6 @@ Siehe `docs/DECISIONS.md`
 - ✅ Meilenstein 5 (Sprachauswahl) — vollständig funktionsfähig
 - ✅ Meilenstein 6 (PWA-Grundgerüst) — vollständig funktionsfähig
 - ✅ Meilenstein 7 (Dark/Light-Theme) — vollständig funktionsfähig
-- ⏳ Meilenstein 8-9: Should-have Features (Zufälliger Artikel, Inhaltsverzeichnis)
+- ⏳ Meilenstein 8-9: Should-have Features (Link-Darstellungs-Demo, Inhaltsverzeichnis)
 - ⏳ Meilenstein 10: Testing & Politur
 
-## 
-
-> > > > > > > 7678280 (feat: Dark/Light Theme + PWA Offline Support)

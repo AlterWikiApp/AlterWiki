@@ -1,7 +1,6 @@
 # Projektprinzipien
 
-**Status:** Verbindlich für alle Beiträge (Menschen wie KI-Agenten)
-**Letzte Aktualisierung:** 2026-08-20
+**Status:** Verbindlich für alle Beiträge (Menschen wie KI-Agenten) **Letzte Aktualisierung:** 2026-08-20
 
 Diese Prinzipien sind Leitplanken. Jede Feature-Entscheidung, jeder Pull
 Request und jede Architekturwahl wird an ihnen gemessen. Im Zweifel hat
@@ -40,8 +39,8 @@ Privatsphäre, Sicherheit und Zugänglichkeit.
 - **Kein Tracking, keine Analytics-Dienste, keine Werbung.** Auch keine
   "kostenlosen" Analytics-SDKs Dritter (z.B. Google Analytics, Firebase) —
   diese sind zudem mit F-Droid nicht kompatibel (siehe Abschnitt 6).
-- Falls später ein Wikipedia-Account verknüpft werden kann (Sync):
-  ausschließlich über offizielles **Wikimedia OAuth**, nie über
+- Falls später ein Wikipedia-Account verknüpft werden kann (Bearbeiten,
+  Sync): ausschließlich über offizielles **Wikimedia OAuth**, nie über
   ein selbstgebautes Login-System, das Zugangsdaten verwaltet.
 
 ## 4. Sicherheit
@@ -71,6 +70,14 @@ Privatsphäre, Sicherheit und Zugänglichkeit.
 - ARIA-Labels wo nötig, Screenreader-Kompatibilität.
 - Automatisierte Prüfung anstreben (z.B. Lighthouse, axe) als Teil der
   Qualitätssicherung.
+- **Nutzerfreiheit bei Darstellungsoptionen:** Standardeinstellungen sind
+  barrierefrei (siehe oben). Bei individuellen Einstellungen gibt es **keine geschmacklichen oder "schützenden" Einschränkungen** — Nutzer
+  dürfen bewusst unlesbare Farben, keine Linkdarstellung usw. wählen.
+  Einzige harte Regel: **Kein Zustand darf irreversibel sein.** Das
+  Einstellungs-Panel selbst muss immer unabhängig von den gewählten
+  Content-Styles bedienbar bleiben (darf von Nutzer-Anpassungen am
+  Content nicht betroffen sein), zusätzlich immer ein funktionierender
+  "Zurücksetzen"-Button vorhanden sein.
 
 ## 6. F-Droid- & AUR-Konformität
 
