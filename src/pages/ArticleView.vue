@@ -2,20 +2,48 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import LanguageSelector from '../components/LanguageSelector.vue'
+import LinkDisplayPanel from '../components/LinkDisplayPanel.vue'
 import { wikipediaClient } from '../api/wikipediaClient'
 import { sanitizeHtml, isInternalWikipediaLink, extractArticleTitle } from '../security/sanitizer'
 import { currentLanguage } from '../state/language'
+import { linkDisplay } from '../state/linkDisplay'
 
 const route = useRoute()
 const router = useRouter()
-
-// DEBUG: Prüfen ob currentLanguage reaktiv ist
-console.log('ArticleView mounted, currentLanguage:', currentLanguage.value)
 
 const articleHtml = ref('')
 const isLoading = ref(true)
 const error = ref<string>()
 const articleTitle = computed(() => route.params.title as string)
+
+/** CSS custom properties applied only to article content — never to the panel. */
+const hasCustomLinkStyle = computed(
+  () =>
+    linkDisplay.noVisualStyle ||
+    linkDisplay.color !== null ||
+    !linkDisplay.underline,
+)
+
+const articleLinkStyle = computed(() => {
+  if (linkDisplay.noVisualStyle) {
+    return {
+      '--article-link-color': 'inherit',
+      '--article-link-decoration': 'none',
+      '--article-link-hover-color': 'inherit',
+    } as Record<string, string>
+  }
+
+  const style: Record<string, string> = {
+    '--article-link-decoration': linkDisplay.underline ? 'underline' : 'none',
+  }
+
+  if (linkDisplay.color) {
+    style['--article-link-color'] = linkDisplay.color
+    style['--article-link-hover-color'] = linkDisplay.color
+  }
+
+  return style
+})
 
 // Watch for route param changes to reload article content when navigating
 // between articles via internal wikilinks (same component, different params)
@@ -59,8 +87,7 @@ const loadArticle = async () => {
 }
 
 // Watch for language changes to reload article in new language
-watch(currentLanguage, (newLang, oldLang) => {
-  console.log('Language changed from', oldLang, 'to', newLang)
+watch(currentLanguage, () => {
   articleHtml.value = ''
   loadArticle()
 })
@@ -104,7 +131,10 @@ const goBack = () => {
           </button>
           <h1 class="article-view__title">{{ articleTitle.replace(/_/g, ' ') }}</h1>
         </div>
-        <LanguageSelector />
+        <div class="article-view__header-actions">
+          <LinkDisplayPanel />
+          <LanguageSelector />
+        </div>
       </div>
 
       <div v-if="isLoading" class="article-view__loading">
@@ -121,6 +151,8 @@ const goBack = () => {
       <div
         v-else
         class="article-view__content"
+        :class="{ 'article-view__content--custom-links': hasCustomLinkStyle }"
+        :style="articleLinkStyle"
         v-html="articleHtml"
         @click="handleLinkClick"
       />
@@ -163,10 +195,23 @@ const goBack = () => {
   min-width: 0;
 }
 
+.article-view__header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
 @media (max-width: 640px) {
   .article-view__header {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .article-view__header-actions {
+    justify-content: flex-start;
   }
 }
 
@@ -280,6 +325,7 @@ const goBack = () => {
 .article-view__content :deep(a) {
   color: #3b82f6;
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .article-view__content :deep(a:hover) {
@@ -292,6 +338,24 @@ const goBack = () => {
 
 .dark .article-view__content :deep(a:hover) {
   color: #3b82f6;
+}
+
+/* Custom demo styles — only when user changed defaults; panel stays unaffected */
+.article-view__content--custom-links :deep(a) {
+  color: var(--article-link-color, #3b82f6);
+  text-decoration: var(--article-link-decoration, underline);
+}
+
+.article-view__content--custom-links :deep(a:hover) {
+  color: var(--article-link-hover-color, #2563eb);
+}
+
+.dark .article-view__content--custom-links :deep(a) {
+  color: var(--article-link-color, #60a5fa);
+}
+
+.dark .article-view__content--custom-links :deep(a:hover) {
+  color: var(--article-link-hover-color, #3b82f6);
 }
 
 .article-view__content :deep(img) {

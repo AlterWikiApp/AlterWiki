@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import {
   linkDisplay,
   LINK_COLOR_PRESETS,
@@ -48,7 +48,7 @@ const onColorInput = (event: Event) => {
   setLinkColor(input.value)
 }
 
-const colorPickerValue = () => linkDisplay.color ?? '#2563eb'
+const colorPickerValue = computed(() => linkDisplay.color ?? '#2563eb')
 </script>
 
 <template>
