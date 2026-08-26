@@ -69,5 +69,5 @@ Konfliktbehandlung) — wird separat vertieft geplant.~~
 
 ## Nächste konkrete Schritte
 
-1. ⏳ Meilensteine 8-9: Should-have Features (Linkanzeige, Inhaltsverzeichnis) bauen
-2. MVP bugfixing und polish
+1. ⏳ Meilenstein 9: Inhaltsverzeichnis
+2. MVP bugfixing und polish (Meilenstein 10)

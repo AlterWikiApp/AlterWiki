@@ -283,3 +283,29 @@ Siehe `docs/DECISIONS.md`
 - ⏳ Meilenstein 8-9: Should-have Features (Link-Darstellungs-Demo, Inhaltsverzeichnis)
 - ⏳ Meilenstein 10: Testing & Politur
 
+## Session 7 — 2026-08-26
+
+### Abgeschlossen: Meilenstein 8 — Link-Darstellungs-Demo
+
+#### Umgesetzt
+
+- `src/state/linkDisplay.ts` — Session-only Reactive State (Farbe, Unterstrichen, keine visuelle Darstellung); **keine** localStorage-Persistenz
+- `src/components/LinkDisplayPanel.vue` — Popover mit Color-Picker, 4 Presets, Checkboxen, Hinweistext und **„Zurücksetzen auf Standard“**
+- `src/pages/ArticleView.vue` — Panel im Artikel-Header; CSS-Variablen nur auf `.article-view__content` (Panel bleibt davon unberührt)
+- **Default:** Theme-aware Blau + Unterstreichung (barrierefrei Light/Dark)
+- **Keine visuelle Linkdarstellung:** `color: inherit`, `text-decoration: none`, Links bleiben klickbar (`cursor: pointer` + bestehende Interception)
+- Freie Kombination aller Optionen ohne geschmackliche Einschränkungen (PRINCIPLES.md §5)
+
+#### Dateien geändert
+
+- **Neu:** `src/state/linkDisplay.ts`, `src/components/LinkDisplayPanel.vue`
+- Geändert: `src/pages/ArticleView.vue`
+
+#### Status
+
+- ✅ Meilenstein 6 (PWA-Grundgerüst)
+- ✅ Meilenstein 7 (Dark/Light-Theme)
+- ✅ Meilenstein 8 (Link-Darstellungs-Demo)
+- ⏳ Meilenstein 9: Inhaltsverzeichnis
+- ⏳ Meilenstein 10: Testing & Politur
+

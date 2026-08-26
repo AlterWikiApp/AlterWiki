@@ -41,6 +41,9 @@ Wikipedias eigene Seite 1:1 anzeigen würde.
    Einschränkungen für den Nutzer, aber das Einstellungs-Panel selbst
    muss immer unabhängig von den gewählten Content-Styles bedienbar
    bleiben, und ein "Zurücksetzen" muss immer funktionieren.
+
+**Update 2026-08-26 (Meilenstein 8):** Implementiert als `LinkDisplayPanel`
+in der Artikelansicht; State in `src/state/linkDisplay.ts` (session-only).
 8. Inhaltsverzeichnis/Sprungmarken im Artikel
 
 ## Datenfluss
