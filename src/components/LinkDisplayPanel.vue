@@ -83,7 +83,7 @@ const colorPickerValue = computed(() => linkDisplay.color ?? '#2563eb')
             <input
               type="color"
               class="link-display-panel__color-input"
-              :value="colorPickerValue()"
+              :value="colorPickerValue"
               :disabled="linkDisplay.noVisualStyle"
               @input="onColorInput"
             />
