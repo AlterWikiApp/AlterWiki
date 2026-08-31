@@ -69,5 +69,4 @@ Konfliktbehandlung) — wird separat vertieft geplant.~~
 
 ## Nächste konkrete Schritte
 
-1. ⏳ Meilenstein 9: Inhaltsverzeichnis
-2. MVP bugfixing und polish (Meilenstein 10)
+1. MVP bugfixing und polish (Meilenstein 10)

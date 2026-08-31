@@ -40,14 +40,12 @@ class WikipediaClient {
     })
   }
 
-  private async fetchWithHeaders(url: string): Promise<Response> {
+   private async fetchWithHeaders(url: string): Promise<Response> {
     try {
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': USER_AGENT,
-          'Api-User-Agent': USER_AGENT,
-        },
-      })
+      // Browser-Clients setzen User-Agent automatisch.
+      // Wikimedia akzeptiert Browser-Requests ohne Custom-UA.
+      // Custom Headers entfernt für Firefox/Midori-Kompatibilität.
+      const response = await fetch(url)
       return response
     } catch {
       if (typeof navigator !== 'undefined' && !navigator.onLine) {

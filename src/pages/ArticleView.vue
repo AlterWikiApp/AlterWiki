@@ -3,15 +3,18 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import LanguageSelector from '../components/LanguageSelector.vue'
 import LinkDisplayPanel from '../components/LinkDisplayPanel.vue'
+import TableOfContents from '../components/TableOfContents.vue'
 import { wikipediaClient } from '../api/wikipediaClient'
 import { sanitizeHtml, isInternalWikipediaLink, extractArticleTitle } from '../security/sanitizer'
 import { currentLanguage } from '../state/language'
 import { linkDisplay } from '../state/linkDisplay'
+import { prepareArticleToc, type TocHeading } from '../utils/articleToc'
 
 const route = useRoute()
 const router = useRouter()
 
 const articleHtml = ref('')
+const tocHeadings = ref<TocHeading[]>([])
 const isLoading = ref(true)
 const error = ref<string>()
 const articleTitle = computed(() => route.params.title as string)
@@ -52,6 +55,7 @@ watch(
   (newTitle, oldTitle) => {
     if (newTitle && newTitle !== oldTitle) {
       articleHtml.value = ''
+      tocHeadings.value = []
       loadArticle()
     }
   },
@@ -75,12 +79,16 @@ const loadArticle = async () => {
   try {
     const rawHtml = await wikipediaClient.getArticle(articleTitle.value)
     // MANDATORY: Sanitize all Wikipedia HTML before rendering
-    articleHtml.value = sanitizeHtml(rawHtml)
+    const sanitized = sanitizeHtml(rawHtml)
+    const prepared = prepareArticleToc(sanitized)
+    articleHtml.value = prepared.html
+    tocHeadings.value = prepared.headings
     // Scroll to top so user starts at beginning of new article
     window.scrollTo({ top: 0, behavior: 'smooth' })
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Failed to load article'
     articleHtml.value = ''
+    tocHeadings.value = []
   } finally {
     isLoading.value = false
   }
@@ -89,6 +97,7 @@ const loadArticle = async () => {
 // Watch for language changes to reload article in new language
 watch(currentLanguage, () => {
   articleHtml.value = ''
+  tocHeadings.value = []
   loadArticle()
 })
 
@@ -148,14 +157,18 @@ const goBack = () => {
         </button>
       </div>
 
-      <div
-        v-else
-        class="article-view__content"
-        :class="{ 'article-view__content--custom-links': hasCustomLinkStyle }"
-        :style="articleLinkStyle"
-        v-html="articleHtml"
-        @click="handleLinkClick"
-      />
+      <div v-else class="article-view__body">
+        <aside class="article-view__toc" aria-label="Artikel-Navigation">
+          <TableOfContents :headings="tocHeadings" />
+        </aside>
+        <div
+          class="article-view__content"
+          :class="{ 'article-view__content--custom-links': hasCustomLinkStyle }"
+          :style="articleLinkStyle"
+          v-html="articleHtml"
+          @click="handleLinkClick"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -172,8 +185,28 @@ const goBack = () => {
 }
 
 .article-view__container {
-  max-width: 900px;
+  max-width: 1120px;
   margin: 0 auto;
+}
+
+.article-view__body {
+  display: grid;
+  /* Aside must stretch to content height so sticky TOC can follow scroll */
+  grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.article-view__toc {
+  min-width: 0;
+  /* Tall column: sticky child stays visible while article scrolls */
+}
+
+@media (max-width: 640px) {
+  .article-view__body {
+    grid-template-columns: minmax(8.5rem, 10rem) minmax(0, 1fr);
+    gap: 0.75rem;
+  }
 }
 
 .article-view__header {
@@ -295,6 +328,7 @@ const goBack = () => {
   margin-bottom: 0.75rem;
   font-weight: 600;
   color: #111827;
+  scroll-margin-top: 1rem;
 }
 
 .dark .article-view__content :deep(h1),

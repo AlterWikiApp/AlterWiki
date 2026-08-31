@@ -309,3 +309,27 @@ Siehe `docs/DECISIONS.md`
 - ⏳ Meilenstein 9: Inhaltsverzeichnis
 - ⏳ Meilenstein 10: Testing & Politur
 
+## Session 8 — 2026-08-26
+
+### Abgeschlossen: Meilenstein 9 — Inhaltsverzeichnis / Sprungmarken
+
+#### Umgesetzt
+
+- `src/utils/articleToc.ts` — Extrahiert `h2`–`h6` aus sanitisiertem Artikel-HTML, stellt fehlende IDs sicher
+- `src/components/TableOfContents.vue` — Vertikale Navigationsleiste links (`nav`/`ol`); **sticky** bleibt beim Seiten-Scroll sichtbar; bei Überlänge eigene Scrollbar (`overflow-y: auto`, `max-height: 100vh`)
+- `src/pages/ArticleView.vue` — Zwei-Spalten-Layout (TOC-Spalte streckt sich auf Artikelhöhe, damit Sticky funktioniert); TOC bleibt auch auf schmalen Viewports links neben dem Text
+- Einrückung nach Überschriftenebene (h3/h4/…)
+- Dark Mode + Tastaturbedienbarkeit (`focus-visible`)
+
+#### Dateien geändert
+
+- **Neu:** `src/utils/articleToc.ts`, `src/components/TableOfContents.vue`
+- Geändert: `src/pages/ArticleView.vue`
+- Doku: `docs/PROGRESS.md`, `docs/ROADMAP.md`, `docs/features/reader.md`
+
+#### Status
+
+- ✅ Meilenstein 8 (Link-Darstellungs-Demo)
+- ✅ Meilenstein 9 (Inhaltsverzeichnis)
+- ⏳ Meilenstein 10: Testing & Politur
+

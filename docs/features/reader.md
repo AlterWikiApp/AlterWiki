@@ -44,7 +44,13 @@ Wikipedias eigene Seite 1:1 anzeigen würde.
 
 **Update 2026-08-26 (Meilenstein 8):** Implementiert als `LinkDisplayPanel`
 in der Artikelansicht; State in `src/state/linkDisplay.ts` (session-only).
+
 8. Inhaltsverzeichnis/Sprungmarken im Artikel
+
+**Update 2026-08-26 (Meilenstein 9):** Vertikales Inhaltsverzeichnis links
+neben dem Artikel (`TableOfContents.vue`). Einträge aus `h2`–`h6` via
+`prepareArticleToc()`; Klick scrollt zur Überschrift. Die Leiste folgt dem
+Seiten-Scroll (`position: sticky`) und ist bei Überlänge selbst scrollbar.
 
 ## Datenfluss
 
