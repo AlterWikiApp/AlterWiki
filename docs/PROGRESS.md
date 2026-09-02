@@ -398,4 +398,31 @@ Siehe `docs/DECISIONS.md`
 - ✅ Meilenstein 7 (Dark/Light-Theme) — vollständig funktionsfähig
 - ✅ Meilenstein 8 (Link-Darstellungs-Demo) — vollständig funktionsfähig
 - ✅ Meilenstein 9 (Inhaltsverzeichnis) — vollständig funktionsfähig
-- ⏳ Meilenstein 10: Testing & Politur
+- ⏳ Meilenstein 10: Testing & Politur (UI-Polish: Englische Übersetzung abgeschlossen)
+
+## Session 7 — 2026-09-03
+
+### Abgeschlossen: UI-Polish - Englische Übersetzung (Meilenstein 10)
+
+#### Umgesetzt
+
+- Alle UI-Texte konsistent auf Englisch übersetzt (Option A - konsistente UI-Sprache)
+- **Geänderte Dateien:**
+  - `src/pages/ArticleView.vue` — aria-label "Article navigation"
+  - `src/components/OfflineBanner.vue` — "You are offline – no new articles"
+  - `src/components/LinkDisplayPanel.vue` — "Link Display", "Color", "Underlined", "No visual link styling", "Reset to default"
+  - `src/components/ThemeToggle.vue` — "Auto/Light/Dark", "Toggle light/dark mode"
+  - `src/components/TableOfContents.vue` — "Table of contents", "Contents"
+  - `src/pages/SearchPage.vue` — Offline-Fehlermeldung übersetzt
+  - `src/api/wikipediaClient.ts` — Offline-Meldung übersetzt, ungenutzte USER_AGENT-Konstante entfernt
+- **TypeScript-Fix:** Fehlende `searchQuery` Variable in SearchPage.vue hinzugefügt
+
+#### Status
+
+- ✅ Meilenstein 4 (Interne Navigation) — vollständig funktionsfähig
+- ✅ Meilenstein 5 (Sprachauswahl) — vollständig funktionsfähig
+- ✅ Meilenstein 6 (PWA-Grundgerüst) — vollständig funktionsfähig
+- ✅ Meilenstein 7 (Dark/Light-Theme) — vollständig funktionsfähig
+- ✅ Meilenstein 8 (Link-Darstellungs-Demo) — vollständig funktionsfähig
+- ✅ Meilenstein 9 (Inhaltsverzeichnis) — vollständig funktionsfähig
+- ⏳ Meilenstein 10: Testing & Politur (UI-Polish abgeschlossen, noch offen: Barrierefreiheits-Check, Cross-Browser-Testing)
