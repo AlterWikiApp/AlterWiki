@@ -8,17 +8,17 @@ import {
 } from '../state/theme'
 
 const modeLabels: Record<string, string> = {
-  system: 'Automatisch',
-  light: 'Hell',
-  dark: 'Dunkel',
+  system: 'Auto',
+  light: 'Light',
+  dark: 'Dark',
 }
 
 const currentModeLabel = computed(() => modeLabels[themePreference.value])
 
 const ariaLabel = computed(() => {
   const mode = currentModeLabel.value
-  const state = isDarkMode.value ? 'dunkel' : 'hell'
-  return `Design: ${mode} (${state}). Klicken für nächsten Modus.`
+  const state = isDarkMode.value ? 'dark' : 'light'
+  return `Theme: ${mode} (${state}). Click for next mode.`
 })
 
 const handleClick = () => {
@@ -53,7 +53,7 @@ const handleSwitchToggle = () => {
       class="theme-toggle__switch"
       :class="{ 'theme-toggle__switch--dark': isDarkMode }"
       :aria-checked="isDarkMode"
-      aria-label="Hell/Dunkel umschalten"
+      aria-label="Toggle light/dark mode"
       @click="handleSwitchToggle"
     >
       <span class="theme-toggle__switch-track" aria-hidden="true">

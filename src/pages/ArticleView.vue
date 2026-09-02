@@ -161,7 +161,7 @@ const goBack = () => {
       </div>
 
       <div v-else class="article-view__body">
-        <aside class="article-view__toc" aria-label="Artikel-Navigation">
+        <aside class="article-view__toc" aria-label="Article navigation">
           <TableOfContents :headings="tocHeadings" />
         </aside>
         <div

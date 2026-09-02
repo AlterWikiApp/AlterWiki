@@ -9,7 +9,7 @@ import { isOnline } from '../state/online'
     role="status"
     aria-live="polite"
   >
-    Du bist offline – keine neuen Artikel
+    You are offline – no new articles
   </div>
 </template>
 

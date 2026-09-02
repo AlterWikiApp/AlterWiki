@@ -3,9 +3,7 @@
 
 import { currentLanguage } from '../state/language'
 
-const USER_AGENT = 'AlterWiki/0.1.0 (https://github.com/AlterWikiApp/AlterWiki; lorddenti@protonmail.com)'
-
-const OFFLINE_MESSAGE = 'Du bist offline – keine neuen Artikel'
+const OFFLINE_MESSAGE = 'You are offline – no new articles'
 
 interface CacheEntry<T> {
   data: T

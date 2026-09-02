@@ -369,7 +369,6 @@ Siehe `docs/DECISIONS.md`
 - ⏳ Sprachwechsel ohne Page-Reload funktionsfähig machen
 - ⏳ Meilenstein 6 (PWA-Grundgerüst)
 
-
 ## Session 6 — 2026-09-02
 
 ### Abgeschlossen: Bugfixing Sprachwechsel auf Artikelseite (404-Handling)

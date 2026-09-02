@@ -65,7 +65,7 @@ const colorPickerValue = computed(() => linkDisplay.color ?? '#2563eb')
       aria-controls="link-display-popover"
       @click="toggle"
     >
-      Link-Darstellung
+      Link Display
     </button>
 
     <div
@@ -73,13 +73,13 @@ const colorPickerValue = computed(() => linkDisplay.color ?? '#2563eb')
       id="link-display-popover"
       class="link-display-panel__popover"
       role="dialog"
-      aria-label="Link-Darstellung im Artikel anpassen"
+      aria-label="Adjust link display in article"
     >
       <fieldset class="link-display-panel__fieldset">
-        <legend class="link-display-panel__legend">Farbe</legend>
+        <legend class="link-display-panel__legend">Color</legend>
         <div class="link-display-panel__color-row">
           <label class="link-display-panel__color-label">
-            <span class="link-display-panel__sr-only">Eigene Farbe</span>
+            <span class="link-display-panel__sr-only">Custom color</span>
             <input
               type="color"
               class="link-display-panel__color-input"
@@ -88,7 +88,7 @@ const colorPickerValue = computed(() => linkDisplay.color ?? '#2563eb')
               @input="onColorInput"
             />
           </label>
-          <div class="link-display-panel__presets" role="group" aria-label="Farb-Presets">
+          <div class="link-display-panel__presets" role="group" aria-label="Color presets">
             <button
               v-for="preset in LINK_COLOR_PRESETS"
               :key="preset.id"
@@ -115,7 +115,7 @@ const colorPickerValue = computed(() => linkDisplay.color ?? '#2563eb')
           :disabled="linkDisplay.noVisualStyle"
           @change="setLinkUnderline(($event.target as HTMLInputElement).checked)"
         />
-        Unterstrichen
+        Underlined
       </label>
 
       <label class="link-display-panel__check">
@@ -124,11 +124,11 @@ const colorPickerValue = computed(() => linkDisplay.color ?? '#2563eb')
           :checked="linkDisplay.noVisualStyle"
           @change="setNoVisualLinkStyle(($event.target as HTMLInputElement).checked)"
         />
-        Keine visuelle Linkdarstellung
+        No visual link styling
       </label>
 
       <p v-if="linkDisplay.noVisualStyle" class="link-display-panel__hint">
-        Links sehen aus wie normaler Text, bleiben aber klickbar.
+        Links look like normal text but remain clickable.
       </p>
 
       <button
@@ -136,7 +136,7 @@ const colorPickerValue = computed(() => linkDisplay.color ?? '#2563eb')
         class="link-display-panel__reset"
         @click="resetLinkDisplay"
       >
-        Zurücksetzen auf Standard
+        Reset to default
       </button>
     </div>
   </div>

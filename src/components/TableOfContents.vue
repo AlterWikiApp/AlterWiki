@@ -21,9 +21,9 @@ const scrollToHeading = (id: string) => {
   <nav
     v-if="headings.length > 0"
     class="toc"
-    aria-label="Inhaltsverzeichnis"
+    aria-label="Table of contents"
   >
-    <h2 class="toc__title">Inhalt</h2>
+    <h2 class="toc__title">Contents</h2>
     <ol class="toc__list">
       <li
         v-for="item in headings"

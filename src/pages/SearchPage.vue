@@ -9,6 +9,7 @@ import { isOnline } from '../state/online'
 import { currentLanguage } from '../state/language'
 
 const router = useRouter()
+const searchQuery = ref('')
 const searchResults = ref<any[] | null>(null)
 const isLoading = ref(false)
 const error = ref<string>()
@@ -20,7 +21,7 @@ const handleSearch = async (query: string) => {
   }
 
   if (!isOnline.value) {
-    error.value = 'Du bist offline – keine neuen Artikel'
+    error.value = 'You are offline – no new articles'
     searchResults.value = []
     return
   }
