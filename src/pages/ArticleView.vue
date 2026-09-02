@@ -6,7 +6,7 @@ import LinkDisplayPanel from '../components/LinkDisplayPanel.vue'
 import TableOfContents from '../components/TableOfContents.vue'
 import { wikipediaClient } from '../api/wikipediaClient'
 import { sanitizeHtml, isInternalWikipediaLink, extractArticleTitle } from '../security/sanitizer'
-import { currentLanguage } from '../state/language'
+import { currentLanguage, NOT_FOUND_MESSAGES } from '../state/language'
 import { linkDisplay } from '../state/linkDisplay'
 import { prepareArticleToc, type TocHeading } from '../utils/articleToc'
 
@@ -78,28 +78,23 @@ const loadArticle = async () => {
 
   try {
     const rawHtml = await wikipediaClient.getArticle(articleTitle.value)
-    // MANDATORY: Sanitize all Wikipedia HTML before rendering
-    const sanitized = sanitizeHtml(rawHtml)
-    const prepared = prepareArticleToc(sanitized)
-    articleHtml.value = prepared.html
-    tocHeadings.value = prepared.headings
-    // Scroll to top so user starts at beginning of new article
+    articleHtml.value = sanitizeHtml(rawHtml)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Failed to load article'
+    // Prüfen, ob es ein 404 ist (Artikel existiert nicht in dieser Sprache)
+    const errorMessage = err instanceof Error ? err.message : 'Failed to load article'
+    
+    if (errorMessage.includes('404') || errorMessage.includes('Not Found') || errorMessage.includes('not exist')) {
+      error.value = NOT_FOUND_MESSAGES[currentLanguage.value]
+    } else {
+      error.value = errorMessage
+    }
+    
     articleHtml.value = ''
-    tocHeadings.value = []
   } finally {
     isLoading.value = false
   }
 }
-
-// Watch for language changes to reload article in new language
-watch(currentLanguage, () => {
-  articleHtml.value = ''
-  tocHeadings.value = []
-  loadArticle()
-})
 
 const handleLinkClick = (event: MouseEvent) => {
   const target = event.target as HTMLElement

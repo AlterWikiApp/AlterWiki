@@ -333,3 +333,40 @@ Siehe `docs/DECISIONS.md`
 - ✅ Meilenstein 9 (Inhaltsverzeichnis)
 - ⏳ Meilenstein 10: Testing & Politur
 
+
+
+## Session 5 — 2026-09-02
+
+### Abgeschlossen: UI-Polish & Sprachauswahl-Erweiterungen
+
+#### "No results found" Box entfernt
+
+- `src/components/SearchResults.vue`: Box wird nur noch nach tatsächlicher Suche angezeigt (`results !== null`), nicht mehr beim initialen Laden
+- `src/pages/SearchPage.vue`: `searchResults` initial auf `null` statt `[]` gesetzt
+
+#### Sprachauswahl auf Suchseite
+
+- `src/pages/SearchPage.vue`: `LanguageSelector`-Komponente eingebunden
+- Sprache kann jetzt vor der ersten Suche gewählt werden
+
+#### Artikelsuche in ausgewählter Sprache
+
+- `src/pages/SearchPage.vue`: `handleSearch` nutzt jetzt `currentLanguage.value` statt hardcoded `'en'`
+- Suche funktioniert jetzt in allen 10 unterstützten Sprachen
+
+#### Bug-Fixing: Sprachwechsel auf Artikelseite (in Arbeit)
+
+- **Problem**: Sprachwechsel im Artikel lädt nicht neu; nach Refresh kommt 404 ohne übersetzte Fehlermeldung
+- **Ursache**: `fetch()` wirft keinen Error bei HTTP 404; Fehler wird nicht als "Artikel nicht gefunden" erkannt
+- **Status**: 
+  - ✅ `NOT_FOUND_MESSAGES`-Dictionary in `src/state/language.ts` hinzugefügt (10 Sprachen)
+  - ✅ `ArticleView.vue`: Import und Fehler-Handler angepasst
+  - ⏳ `wikipediaClient.ts`: `fetchWithHeaders` muss 404 manuell als Error werfen
+  - ⏳ `ArticleView.vue`: `watch(currentLanguage)` prüfen ob korrekt platziert
+- **Nächster Schritt**: `fetchWithHeaders` auf `response.ok` prüfen lassen; `getArticle` 404-Status abfangen
+
+#### Offene Punkte
+
+- ⏳ 404-Fehler sauber abfangen und übersetzte Meldung anzeigen
+- ⏳ Sprachwechsel ohne Page-Reload funktionsfähig machen
+- ⏳ Meilenstein 6 (PWA-Grundgerüst)

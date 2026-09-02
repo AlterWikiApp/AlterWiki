@@ -54,7 +54,18 @@ watch(currentLanguage, (newLang) => {
 export function setLanguage(code: LanguageCode): void {
   currentLanguage.value = code
 }
-
+export const NOT_FOUND_MESSAGES: Record<LanguageCode, string> = {
+  en: 'This article does not exist in English',
+  de: 'Dieser Artikel existiert nicht auf Deutsch',
+  fr: "Cet article n'existe pas en français",
+  es: 'Este artículo no existe en español',
+  it: 'Questo articolo non esiste in italiano',
+  pt: 'Este artigo não existe em português',
+  ru: 'Эта статья не существует на русском',
+  ja: 'この記事は日本語では存在しません',
+  zh: '该文章不存在于中文',
+  ar: 'هذه المقالة غير موجودة باللغة العربية',
+}
 export function getLanguageName(code: LanguageCode): string {
   const lang = SUPPORTED_LANGUAGES.find((l) => l.code === code)
   return lang?.native || code

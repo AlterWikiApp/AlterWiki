@@ -6,6 +6,7 @@ import SearchResults from '../components/SearchResults.vue'
 import LanguageSelector from '../components/LanguageSelector.vue'
 import { wikipediaClient } from '../api/wikipediaClient'
 import { isOnline } from '../state/online'
+import { currentLanguage } from '../state/language'
 
 const router = useRouter()
 const searchResults = ref<any[] | null>(null)
@@ -28,7 +29,7 @@ const handleSearch = async (query: string) => {
   error.value = undefined
   
   try {
-    const response = await wikipediaClient.search(query, 'en', 10)
+    const response = await wikipediaClient.search(query, currentLanguage.value, 10)
     
     if (response.pages) {
       searchResults.value = response.pages.map((page: any) => ({
