@@ -69,4 +69,4 @@ Konfliktbehandlung) — wird separat vertieft geplant.~~
 
 ## Nächste konkrete Schritte
 
-1. MVP bugfixing und polish (Meilenstein 10)
+1. MVP bugfixing und polish (Meilenstein 10) — siehe `docs/Phase 1.10 — MVP.md` für aktuellen Status

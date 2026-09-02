@@ -194,10 +194,10 @@ const goBack = () => {
 
 .article-view__body {
   display: grid;
-  /* Aside must stretch to content height so sticky TOC can follow scroll */
+  /* TOC uses sticky positioning - needs align-items: start to work properly */
   grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr);
   gap: 1.5rem;
-  align-items: stretch;
+  align-items: start;
 }
 
 .article-view__toc {

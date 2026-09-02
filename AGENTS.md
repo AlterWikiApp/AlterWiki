@@ -11,7 +11,8 @@ Bitte dieses Dokument **immer zuerst lesen**, bevor du Code schreibst.
    konform sein.
 2. `docs/features/` — die Spezifikation des Feature-Bereichs, an dem du
    gerade arbeitest.
-3. Diese Datei.
+3. `docs/Phase 1.10 — MVP.md` — aktueller Status der Meilensteine für Phase 1.
+4. Diese Datei.
 
 Wenn eine Anforderung im Auftrag den Prinzipien widerspricht: **nachfragen
 statt einfach umsetzen.**

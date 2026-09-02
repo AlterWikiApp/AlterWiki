@@ -404,6 +404,8 @@ Siehe `docs/DECISIONS.md`
 
 ### Abgeschlossen: UI-Polish - Englische Übersetzung (Meilenstein 10)
 
+**Hinweis:** Aktueller Status aller Meilensteine siehe `docs/Phase 1.10 — MVP.md`
+
 #### Umgesetzt
 
 - Alle UI-Texte konsistent auf Englisch übersetzt (Option A - konsistente UI-Sprache)
