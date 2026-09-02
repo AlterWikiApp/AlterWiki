@@ -3,18 +3,18 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import SearchInput from '../components/SearchInput.vue'
 import SearchResults from '../components/SearchResults.vue'
+import LanguageSelector from '../components/LanguageSelector.vue'
 import { wikipediaClient } from '../api/wikipediaClient'
 import { isOnline } from '../state/online'
 
 const router = useRouter()
-const searchQuery = ref('')
-const searchResults = ref<any[]>([])
+const searchResults = ref<any[] | null>(null)
 const isLoading = ref(false)
 const error = ref<string>()
 
 const handleSearch = async (query: string) => {
   if (!query.trim()) {
-    searchResults.value = []
+    searchResults.value = null
     return
   }
 
@@ -55,7 +55,10 @@ const handleSelectResult = (title: string) => {
 <template>
   <div class="search-page">
     <div class="search-page__container">
-      <h1 class="search-page__title">Wikipedia Viewer</h1>
+            <div class="search-page__header">
+        <h1 class="search-page__title">New Wikipedia Viewer</h1>
+        <LanguageSelector />
+      </div>
       
       <div class="search-page__input-wrapper">
         <SearchInput
@@ -104,6 +107,20 @@ const handleSelectResult = (title: string) => {
 }
 .search-page__input-wrapper {
   margin-bottom: 1rem;
+}
+.search-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 640px) {
+  .search-page__header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
 }
 .search-page__header {
   display: flex;

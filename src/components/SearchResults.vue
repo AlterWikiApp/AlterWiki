@@ -6,7 +6,7 @@ interface SearchResult {
 }
 
 interface Props {
-  results: SearchResult[]
+  results: SearchResult[] | null
   loading: boolean
   error?: string
 }
@@ -24,7 +24,7 @@ const handleSelect = (title: string) => {
 </script>
 
 <template>
-  <div class="search-results">
+  <div v-if="results !== null || loading || error" class="search-results">
     <div v-if="loading" class="search-results__loading">
       Loading...
     </div>
@@ -33,10 +33,7 @@ const handleSelect = (title: string) => {
       {{ error }}
     </div>
     
-    <div v-else-if="results.length === 0" class="search-results__empty">
-      No results found
-    </div>
-    
+        
     <ul v-else class="search-results__list">
       <li
         v-for="result in results"
