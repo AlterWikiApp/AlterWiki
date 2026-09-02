@@ -60,10 +60,14 @@ watch(
     }
   },
   { immediate: false }
-)
 
-onMounted(async () => {
-  await loadArticle()
+  
+)
+// Watch for language changes to reload article in new language
+watch(currentLanguage, () => {
+  articleHtml.value = ''
+  tocHeadings.value = []
+  loadArticle()
 })
 
 const loadArticle = async () => {
@@ -83,18 +87,22 @@ const loadArticle = async () => {
   } catch (err) {
     // Prüfen, ob es ein 404 ist (Artikel existiert nicht in dieser Sprache)
     const errorMessage = err instanceof Error ? err.message : 'Failed to load article'
-    
+
     if (errorMessage.includes('404') || errorMessage.includes('Not Found') || errorMessage.includes('not exist')) {
       error.value = NOT_FOUND_MESSAGES[currentLanguage.value]
     } else {
       error.value = errorMessage
     }
-    
+
     articleHtml.value = ''
   } finally {
     isLoading.value = false
   }
 }
+
+onMounted(async () => {
+  await loadArticle()
+})
 
 const handleLinkClick = (event: MouseEvent) => {
   const target = event.target as HTMLElement

@@ -62,7 +62,8 @@ class WikipediaClient {
       throw new Error(OFFLINE_MESSAGE)
     }
 
-    throw new Error(`${fallback}: ${response.statusText}`)
+    // Include status code explicitly for reliable 404 detection
+    throw new Error(`${fallback} (${response.status}): ${response.statusText}`)
   }
 
   async search(query: string, lang?: string, limit: number = 10): Promise<any> {

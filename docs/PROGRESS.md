@@ -333,8 +333,6 @@ Siehe `docs/DECISIONS.md`
 - ✅ Meilenstein 9 (Inhaltsverzeichnis)
 - ⏳ Meilenstein 10: Testing & Politur
 
-
-
 ## Session 5 — 2026-09-02
 
 ### Abgeschlossen: UI-Polish & Sprachauswahl-Erweiterungen
@@ -370,3 +368,35 @@ Siehe `docs/DECISIONS.md`
 - ⏳ 404-Fehler sauber abfangen und übersetzte Meldung anzeigen
 - ⏳ Sprachwechsel ohne Page-Reload funktionsfähig machen
 - ⏳ Meilenstein 6 (PWA-Grundgerüst)
+
+
+## Session 6 — 2026-09-02
+
+### Abgeschlossen: Bugfixing Sprachwechsel auf Artikelseite (404-Handling)
+
+#### Problem
+
+- 404-Fehler bei nicht-existierendem Artikel in Zielsprache wurde nicht zuverlässig als übersetzte Meldung angezeigt
+- `onMounted` war fälschlich innerhalb der `loadArticle`-Funktion verschachtelt
+- `ensureResponseOk` warf keinen expliziten Status-Code, was die 404-Erkennung erschwerte
+
+#### Lösung
+
+- `src/pages/ArticleView.vue`: `onMounted` aus `loadArticle` herausgezogen und auf oberster Ebene platziert
+- `src/api/wikipediaClient.ts`: `ensureResponseOk` wirft jetzt Status-Code explizit mit (z.B. "Article fetch failed (404): Not Found")
+- 404-Erkennung in `ArticleView.vue` funktioniert jetzt zuverlässig und zeigt übersetzte Meldungen aus `NOT_FOUND_MESSAGES`
+
+#### Dateien geändert
+
+- Geändert: `src/pages/ArticleView.vue`
+- Geändert: `src/api/wikipediaClient.ts`
+
+#### Status
+
+- ✅ Meilenstein 4 (Interne Navigation) — vollständig funktionsfähig
+- ✅ Meilenstein 5 (Sprachauswahl) — vollständig funktionsfähig
+- ✅ Meilenstein 6 (PWA-Grundgerüst) — vollständig funktionsfähig
+- ✅ Meilenstein 7 (Dark/Light-Theme) — vollständig funktionsfähig
+- ✅ Meilenstein 8 (Link-Darstellungs-Demo) — vollständig funktionsfähig
+- ✅ Meilenstein 9 (Inhaltsverzeichnis) — vollständig funktionsfähig
+- ⏳ Meilenstein 10: Testing & Politur
