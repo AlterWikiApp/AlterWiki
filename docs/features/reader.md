@@ -52,6 +52,23 @@ neben dem Artikel (`TableOfContents.vue`). Einträge aus `h2`–`h6` via
 `prepareArticleToc()`; Klick scrollt zur Überschrift. Die Leiste folgt dem
 Seiten-Scroll (`position: sticky`) und ist bei Überlänge selbst scrollbar.
 
+9. **Ablenkungsarmer Modus (Distraction-Free Reading):** Erster Reading-Mode
+   und Grundgerüst für spätere Modi (Schnelllese, Kinder, Vorlese).
+   Einstieg über einen Button in der Artikel-Headerleiste; ein Klick
+   blendet allen App-Chrome aus (globales App-Header-Theme-Toggle,
+   Artikel-Header mit Aktionen, Inhaltsverzeichnis) und zentriert den
+   Artikeltext mit begrenzter Zeilenlänge. Kein Modal — man bleibt im
+   Artikel und kann normal scrollen. Ausgang: **Escape-Taste**, eine beim
+   Hover am oberen Bildschirmrand einblendende Exit-Leiste, oder
+   automatisch beim Verlassen der Artikelseite. Session-only, bewusst
+   **nicht persistiert**. Barrierefreiheit: erbt das gewählte Theme,
+   Links bleiben klickbar und tastaturbedienbar, Zustandswechsel wird
+   per `aria-live` kommuniziert, `prefers-reduced-motion` wird respektiert.
+
+**Update 2026-11-04:** Implementiert als `useReadingMode()` in
+`src/state/readingMode.ts`; UI in `src/pages/ArticleView.vue` und
+`src/App.vue`.
+
 ## Datenfluss
 
 1. **Suche:** Nutzereingabe → REST-API-Suche (mit Debounce) → Live-Ergebnisliste.

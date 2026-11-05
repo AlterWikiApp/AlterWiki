@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import LanguageSelector from '../components/LanguageSelector.vue'
 import LinkDisplayPanel from '../components/LinkDisplayPanel.vue'
@@ -8,6 +8,7 @@ import { wikipediaClient } from '../api/wikipediaClient'
 import { sanitizeHtml, isInternalWikipediaLink, extractArticleTitle } from '../security/sanitizer'
 import { currentLanguage, NOT_FOUND_MESSAGES } from '../state/language'
 import { linkDisplay } from '../state/linkDisplay'
+import { useReadingMode } from '../state/readingMode'
 import { prepareArticleToc, type TocHeading } from '../utils/articleToc'
 
 const route = useRoute()
@@ -18,6 +19,11 @@ const tocHeadings = ref<TocHeading[]>([])
 const isLoading = ref(true)
 const error = ref<string>()
 const articleTitle = computed(() => route.params.title as string)
+
+const { isDistractionFree, toggleDistractionFree, exitDistractionFree } =
+  useReadingMode()
+
+const showExitBar = ref(false)
 
 /** CSS custom properties applied only to article content — never to the panel. */
 const hasCustomLinkStyle = computed(
@@ -100,8 +106,23 @@ const loadArticle = async () => {
   }
 }
 
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && isDistractionFree.value) {
+    exitDistractionFree()
+    showExitBar.value = false
+  }
+}
+
 onMounted(async () => {
+  window.addEventListener('keydown', handleKeydown)
   await loadArticle()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
+  // Leaving the article view always ends distraction-free mode
+  exitDistractionFree()
+  showExitBar.value = false
 })
 
 const handleLinkClick = (event: MouseEvent) => {
@@ -131,8 +152,35 @@ const goBack = () => {
 
 <template>
   <div class="article-view">
+    <div
+      v-if="isDistractionFree"
+      class="article-view__df-zone"
+      @mouseenter="showExitBar = true"
+    >
+      <div
+        class="article-view__exit-bar"
+        :class="{ 'article-view__exit-bar--visible': showExitBar }"
+        @mouseleave="showExitBar = false"
+      >
+        <button
+          class="article-view__exit-button"
+          @click="exitDistractionFree(); showExitBar = false"
+        >
+          Exit distraction-free mode
+        </button>
+      </div>
+    </div>
+
     <div class="article-view__container">
-      <div class="article-view__header">
+      <p class="article-view__sr-only" aria-live="polite">
+        {{
+          isDistractionFree
+            ? 'Distraction-free mode on'
+            : 'Distraction-free mode off'
+        }}
+      </p>
+
+      <div v-if="!isDistractionFree" class="article-view__header">
         <div class="article-view__header-left">
           <button 
             class="article-view__back-button"
@@ -144,6 +192,14 @@ const goBack = () => {
           <h1 class="article-view__title">{{ articleTitle.replace(/_/g, ' ') }}</h1>
         </div>
         <div class="article-view__header-actions">
+          <button
+            class="article-view__df-button"
+            :aria-pressed="isDistractionFree"
+            aria-label="Distraction-free reading mode"
+            @click="toggleDistractionFree"
+          >
+            Distraction-free
+          </button>
           <LinkDisplayPanel />
           <LanguageSelector />
         </div>
@@ -160,8 +216,16 @@ const goBack = () => {
         </button>
       </div>
 
-      <div v-else class="article-view__body">
-        <aside class="article-view__toc" aria-label="Article navigation">
+      <div
+        v-else
+        class="article-view__body"
+        :class="{ 'article-view__body--distraction-free': isDistractionFree }"
+      >
+        <aside
+          v-if="!isDistractionFree"
+          class="article-view__toc"
+          aria-label="Article navigation"
+        >
           <TableOfContents :headings="tocHeadings" />
         </aside>
         <div
@@ -190,6 +254,119 @@ const goBack = () => {
 .article-view__container {
   max-width: 1120px;
   margin: 0 auto;
+}
+
+.article-view__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.article-view__df-button {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.article-view__df-button:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.article-view__df-button[aria-pressed='true'] {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.dark .article-view__df-button {
+  color: #d1d5db;
+  border-color: #374151;
+}
+
+.dark .article-view__df-button:hover {
+  background-color: #374151;
+  color: #f9fafb;
+}
+
+.dark .article-view__df-button[aria-pressed='true'] {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.article-view__df-zone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.5rem;
+  z-index: 40;
+}
+
+.article-view__exit-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  transform: translateY(-100%);
+}
+
+.article-view__exit-bar--visible {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .article-view__exit-bar {
+    transition: transform 0.2s;
+  }
+}
+
+.dark .article-view__exit-bar {
+  background-color: #111827;
+  border-bottom-color: #374151;
+}
+
+.article-view__exit-button {
+  padding: 0.375rem 0.75rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.article-view__exit-button:hover {
+  background-color: #2563eb;
+}
+
+.article-view__body--distraction-free {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.article-view__body--distraction-free .article-view__content {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 1rem 0.5rem;
 }
 
 .article-view__body {
