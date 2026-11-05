@@ -428,3 +428,32 @@ Siehe `docs/DECISIONS.md`
 - ✅ Meilenstein 8 (Link-Darstellungs-Demo) — vollständig funktionsfähig
 - ✅ Meilenstein 9 (Inhaltsverzeichnis) — vollständig funktionsfähig
 - ⏳ Meilenstein 10: Testing & Politur (UI-Polish abgeschlossen, noch offen: Barrierefreiheits-Check, Cross-Browser-Testing)
+
+## Session 8 — 2026-11-04
+
+### Abgeschlossen: Build-Fix + Ablenkungsarmer Modus (Distraction-Free Reading)
+
+#### Build-Fix
+
+- ✅ `vue-tsc@^1.8` war mit TypeScript 5.x inkompatibel ("Search string not found") — `npm run build` schlug komplett fehl
+- ✅ Upgrade auf `vue-tsc@^3.3.14`; Build (Typecheck + Vite + PWA) läuft wieder
+
+#### Ablenkungsarmer Modus (aus der Feature-Liste, "Verschiedene Reading-Modes")
+
+- **Neu:** `src/state/readingMode.ts` — zentraler Session-State (`useReadingMode()`), bewusst nicht persistiert
+- `src/pages/ArticleView.vue` — Toggle-Button im Artikel-Header (`aria-pressed`); im Modus werden Artikel-Header und Inhaltsverzeichnis ausgeblendet, Artikeltext zentriert (max. ~42rem Zeilenlänge)
+- `src/App.vue` — globales App-Header-Theme-Toggle wird im Modus ausgeblendet (OfflineBanner bleibt, da sicherheitsrelevanter Status)
+- Ausgang: Escape-Taste, Hover-Exit-Leiste am oberen Bildschirmrand, automatisch beim Verlassen der Artikelseite
+- Barrierefreiheit: `aria-live`-Statusmeldung, Theme wird geerbt, Links bleiben klickbar/Tastatur-navigierbar, `prefers-reduced-motion` respektiert
+- Doku: `docs/features/reader.md` (Soll-Stand + Update), dieser Eintrag
+
+#### Bekannte Punkte (nicht durch diese Session verursacht)
+
+- `npm run lint` schlägt fehl: ESLint v10 erwartet `eslint.config.js`, Repo nutzt noch `.eslintrc.cjs` — Migration noch offen
+- npm audit: 5 Vulnerabilities (bekannt, siehe Session 2)
+
+#### Status
+
+- ✅ Build wieder funktionsfähig
+- ✅ Ablenkungsarmer Modus implementiert
+- ⏳ Meilenstein 10: Testing & Politur (Barrierefreiheits-Check, Cross-Browser)

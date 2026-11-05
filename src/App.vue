@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import OfflineBanner from './components/OfflineBanner.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
+import { useReadingMode } from './state/readingMode'
+
+const { isDistractionFree } = useReadingMode()
 </script>
 
 <template>
   <div class="app">
-    <header class="app__header">
+    <header v-if="!isDistractionFree" class="app__header">
       <ThemeToggle />
     </header>
     <OfflineBanner />
